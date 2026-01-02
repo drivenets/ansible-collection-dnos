@@ -30,4 +30,3 @@ updates:
       prefix: "deps"
       prefix-development: "deps"
       include: "scope"
-
