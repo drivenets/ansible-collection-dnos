@@ -1,0 +1,209 @@
+---
+# CI/CD Pipeline for DNOS Collection
+# Based on Ansible team-devtools best practices
+
+name: Test
+
+on:
+  push:
+    branches: [main, devel]
+  pull_request:
+    branches: [main, devel]
+  schedule:
+    # Run tests weekly on Monday at 06:00 UTC
+    - cron: "0 6 * * 1"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sanity:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ansible-version:
+          - "stable-2.16"
+          - "stable-2.17"
+          - "stable-2.18"
+          - "stable-2.19"
+        python-version:
+          - "3.11"
+          - "3.12"
+
+    name: Sanity (Python ${{ matrix.python-version }}, Ansible ${{ matrix.ansible-version }})
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          path: ansible_collections/drivenets/dnos
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install pip and pipx
+        run: |
+          python -m pip install --upgrade pip pipx
+          pipx ensurepath
+
+      - name: Install collection dependencies
+        run: |
+          # Install ansible-core to get ansible-galaxy
+          pipx run --spec "git+https://github.com/ansible/ansible@${{ matrix.ansible-version }}" \
+            ansible-galaxy collection install -r ansible_collections/drivenets/dnos/requirements.yml -p .
+
+      - name: Run ansible-test sanity in Docker
+        run: |
+          pipx run --spec "git+https://github.com/ansible/ansible@${{ matrix.ansible-version }}" \
+            ansible-test sanity --docker -v --python ${{ matrix.python-version }}
+        working-directory: ansible_collections/drivenets/dnos
+
+  units:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ansible-version:
+          - "stable-2.16"
+          - "stable-2.17"
+          - "stable-2.18"
+          - "stable-2.19"
+        python-version:
+          - "3.11"
+          - "3.12"
+
+    name: Units (Python ${{ matrix.python-version }}, Ansible ${{ matrix.ansible-version }})
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          path: ansible_collections/drivenets/dnos
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip pipx
+          pipx run --spec "git+https://github.com/ansible/ansible@${{ matrix.ansible-version }}" ansible --version
+          pip install -r ansible_collections/drivenets/dnos/test-requirements.txt
+
+      - name: Install collection dependencies
+        run: |
+          pipx run --spec "git+https://github.com/ansible/ansible@${{ matrix.ansible-version }}" \
+            ansible-galaxy collection install -r ansible_collections/drivenets/dnos/requirements.yml -p .
+
+      - name: Run ansible-test units
+        run: ansible-test units --coverage --python ${{ matrix.python-version }}
+        working-directory: ansible_collections/drivenets/dnos
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        with:
+          working-directory: ansible_collections/drivenets/dnos
+
+  linting:
+    runs-on: ubuntu-latest
+    name: Linting
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible-core ansible-lint flake8 flake8-pyproject isort black yamllint
+
+      - name: Check import sorting
+        run: isort --check-only --diff plugins tests
+
+      - name: Check code formatting
+        run: black --check --diff plugins tests
+
+      - name: Run yamllint
+        run: yamllint tests examples galaxy.yml meta/
+
+      - name: Run flake8
+        run: flake8 plugins
+
+      - name: Run ansible-lint
+        run: ansible-lint
+
+
+  # Integration tests are skipped in CI/CD as they require real DNOS devices.
+  # All integration test targets are marked with "unsupported" in their aliases files,
+  # which tells ansible-test to skip them automatically.
+  #
+  # To run integration tests manually against real devices:
+  #   ansible-test integration <target> --inventory tests/integration/inventory.networking
+  #
+  # See tests/integration/README.md for detailed instructions.
+  #
+  # integration:
+  #   runs-on: ubuntu-latest
+  #   name: Integration Tests
+  #   if: github.event_name != 'schedule'
+  #
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #       with:
+  #         path: ansible_collections/drivenets/dnos
+  #
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v5
+  #       with:
+  #         python-version: "3.10"
+  #
+  #     - name: Install dependencies
+  #       run: |
+  #         python -m pip install --upgrade pip
+  #         pip install ansible-core
+  #         pip install -r test-requirements.txt
+  #
+  #     - name: Run integration tests
+  #       run: ansible-test integration --coverage
+  #       working-directory: ansible_collections/drivenets/dnos
+  #       env:
+  #         # Add any required environment variables for testing
+  #         ANSIBLE_COLLECTIONS_PATHS: ${{ github.workspace }}
+
+  build:
+    runs-on: ubuntu-latest
+    name: Build Collection
+    needs: [sanity, units, linting]
+    # Note: Integration tests excluded - they require real DNOS devices
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible-core
+
+      - name: Build collection
+        run: ansible-galaxy collection build
+
+      - name: Upload collection artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: drivenets-dnos-collection
+          path: drivenets-dnos-*.tar.gz

@@ -1,0 +1,25 @@
+# Python dependencies for drivenets.dnos collection
+# These are controller-side runtime dependencies for execution environments
+# Only lower bounds (>=) or no version constraints are used per Ansible guidelines
+
+# NETCONF support - required for netconf connection plugin
+ncclient>=0.6.13
+
+# SSH connection support
+paramiko>=2.12.0
+ansible-pylibssh>=1.1.0
+
+# Data handling
+PyYAML>=6.0.0
+
+# HTTP/API interactions (if needed for future modules)
+requests>=2.25.0
+urllib3>=1.26.0
+
+# Type hints compatibility
+typing-extensions>=4.0.0
+
+# XML parsing
+xmltodict>=1.0.2
+jxmlease>=1.0.3
+

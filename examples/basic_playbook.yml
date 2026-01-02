@@ -1,0 +1,191 @@
+---
+# Example playbook demonstrating DNOS modules usage
+- name: DNOS Configuration Example
+  hosts: dnos_devices
+  gather_facts: false
+  connection: network_cli
+  tasks:
+    - name: Get system information
+      drivenets.dnos.dnos_command:
+        commands:
+          - show system name
+          - show system uptime
+          - show interfaces
+      register: system_info
+      ignore_errors: true
+
+    - name: Configure login banner
+      drivenets.dnos.dnos_config:
+        comment: "change system commit"
+        lines: |
+          system login banner "********************************************************************************\n================     WARNING THIS DEVICE IS MANAGED BY PNP     =================\n================ MANUAL CHANGES MIGHT RESULT IN SERVICE IMPACT =================\n================ ALL CONFIG CHANGES MUST BE MADE VIA NETADMIN  =================\n********************************************************************************"
+    
+    - name: Configure system settings
+      drivenets.dnos.dnos_config:
+        lines:
+          - system name {{ inventory_hostname }}
+          - system logging file system-events size "{{ system_file_system_events_size | default(100) }}"
+        backup: true
+      # tags: never
+    - name: Configure interface
+      drivenets.dnos.dnos_config:
+        lines: |
+          interfaces {{ item.name }}
+            description "{{ item.description }}"
+            mtu {{ item.mtu | default(1536) }}
+            admin-state enabled
+      loop:
+        - { name: "ge100-0/0/1", description: "Uplink to Core" }
+
+    - name: Clear aaa-server config
+      drivenets.dnos.dnos_config:
+        lines: |
+          no system aaa-server
+
+    - name: Create commit with confirm
+      drivenets.dnos.dnos_config:
+        comment: "apply aaa-server config"
+        lines: |
+          system
+            aaa-server
+              admin-state disabled
+              authentication-order aaa-local
+              fallback-on-reject enabled
+            !
+          !
+        confirm: 2
+    
+    - name: Confirm pending commit
+      drivenets.dnos.dnos_config:
+        confirm_commit: true
+    
+    - name: Do rollback 1
+      drivenets.dnos.dnos_config:
+        rollback: 1
+
+    - name: Create commit with confirm (second time)
+      drivenets.dnos.dnos_config:
+        comment: "apply aaa-server config"
+        lines: |
+          no system aaa-server
+          system
+            aaa-server
+              admin-state disabled
+              authentication-order aaa-local
+              fallback-on-reject enabled
+            !
+          !
+        confirm: 2
+    
+    - name: Cancel pending commit
+      drivenets.dnos.dnos_config:
+        cancel_pending_commit: true
+
+    - name: Ability to commit simple config with commit message
+      drivenets.dnos.dnos_config:
+        lines: |
+          system
+            aaa-server
+              admin-state disabled
+              authentication-order aaa-local
+              fallback-on-reject enabled
+            !
+          !
+        commit: true
+        comment: "apply aaa-server config"
+
+    - name: Apply same commit wtice in a row (idempotency)
+      drivenets.dnos.dnos_config:
+        lines: |
+          system
+            aaa-server
+              admin-state disabled
+              authentication-order aaa-local
+              fallback-on-reject enabled
+            !
+          !
+        commit: true
+        comment: "apply aaa-server config"
+
+    - name: Define AAA server configuration block
+      ansible.builtin.set_fact:
+        aaa_server_config: |
+          system
+            aaa-server
+              admin-state disabled
+              authentication-order aaa-local
+              fallback-on-reject enabled
+            !
+          !
+
+    - name: Compute diff against running and intended
+      drivenets.dnos.dnos_config:
+        lines: "{{ aaa_server_config }}"
+        diff_against: "{{ diff_source }}"
+        commit: false
+        intended_config: "{{ lookup('file', './resources/aaa_server_config.cfg') }}"
+      register: diff_result
+      loop: ["running", "intended"]
+      loop_control:
+        loop_var: diff_source
+
+    - name: Apply configuration with factory-default override
+      drivenets.dnos.dnos_config:
+        commit: true
+        src: "{{ lookup('file', './resources/complete_config.cfg') }}"
+        replace: config
+        comment: "Complete config replacement from factory-default"
+
+    - name: Reset device to factory defaults only
+      drivenets.dnos.dnos_config:
+        commit: true
+        replace: config
+        comment: "Reset to factory default configuration"
+
+    # Save configuration examples
+    - name: Save current configuration to file
+      drivenets.dnos.dnos_config:
+        save: my_backup_config
+
+    - name: Configure interface and save to file
+      drivenets.dnos.dnos_config:
+        lines:
+          - description "Configured by Ansible"
+          - admin-state enabled
+        parents: interfaces ge100-0/0/2
+        save: interface_config_backup
+
+    - name: Apply config, save it, then rollback (testing scenario)
+      drivenets.dnos.dnos_config:
+        lines:
+          - description "Test configuration - will be rolled back"
+          - mtu 9000
+        parents: interfaces ge100-0/0/3
+        commit: false
+        save: test_config_before_rollback
+
+    # Example 1: Configuration failure with default behavior
+    # The task will fail on the bad command and apply nothing (atomic rollback).
+    # The playbook will STOP here due to the failure.
+    - name: Push interface config (will fail and stop playbook)
+      drivenets.dnos.dnos_config:
+        lines:
+          - interface {{ iface }}
+          - intentionally bad command
+          - description "Configured by Ansible (CLI)"
+
+    # Example 2: Configuration failure with failed_when
+    # The task will fail on the bad command and apply nothing (atomic rollback).
+    # However, Ansible will continue to the next task because failed_when: false.
+    # Note: ignore_errors: true can also be used, but failed_when is preferred by ansible-lint
+    - name: Push interface config (will fail but continue playbook)
+      drivenets.dnos.dnos_config:
+        lines:
+          - interface {{ iface }}
+          - intentionally bad command
+          - description "Configured by Ansible (CLI)"
+      failed_when: false
+
+    - name: Restart router
+      drivenets.dnos.dnos_reboot:
+        reboot: true

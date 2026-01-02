@@ -1,0 +1,25 @@
+.. Document meta
+
+:orphan:
+
+.. meta::
+  :antsibull-docs: 2.21.0
+
+.. Anchors
+
+.. _ansible_collections.drivenets.dnos.command_module:
+
+.. Title
+
+drivenets.dnos.command module
++++++++++++++++++++++++++++++
+
+.. Collection note
+
+.. note::
+    This redirect is part of the `drivenets.dnos collection <https://galaxy.ansible.com/ui/repo/published/drivenets/dnos/>`_ (version 1.0.0).
+
+    To use it in a playbook, specify: :code:`drivenets.dnos.command`.
+
+- This is a redirect to the :ansplugin:`drivenets.dnos.dnos_command module <drivenets.dnos.dnos_command#module>`.
+- This redirect does **not** work with Ansible 2.9.

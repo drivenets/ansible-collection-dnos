@@ -1,0 +1,23 @@
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101">
+  <edit-config>
+    <target>
+      <candidate/>
+    </target>
+    <config xmlns:iana-if-type="urn:ietf:params:xml:ns:yang:iana-if-type">
+      <drivenets-top xmlns="http://drivenets.com/ns/yang/dn-top">
+        <interfaces xmlns="http://drivenets.com/ns/yang/dn-interfaces">
+          <interface>
+            <name>bundle-14</name>
+            <config-items>
+              <name>bundle-14</name>
+              <l2-mtu>4800</l2-mtu>
+              <type>iana-if-type:ieee8023adLag</type>
+              <enabled>true</enabled>
+            </config-items>
+          </interface>
+        </interfaces>
+      </drivenets-top>
+    </config>
+  </edit-config>
+</rpc>]]>]]>
+

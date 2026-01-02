@@ -1,0 +1,171 @@
+# MANIFEST.in for drivenets.dnos Ansible Collection
+# Controls which files are included/excluded during packaging
+
+# ========================================
+# ALWAYS INCLUDE - Required Files
+# ========================================
+
+# Galaxy metadata and licensing
+include galaxy.yml
+include LICENSE
+include README.md
+include CHANGELOG.md
+
+# Package configuration
+include pyproject.toml
+include requirements.txt
+include test-requirements.txt
+include bindep.txt
+
+# ========================================
+# COLLECTION STRUCTURE - Core Components
+# ========================================
+
+# Plugin directories (recursive include)
+recursive-include plugins *.py
+recursive-include plugins *.yml
+recursive-include plugins *.yaml
+
+# Module utilities and shared code
+recursive-include plugins/module_utils *.py
+
+# Meta configuration
+recursive-include meta *.yml
+recursive-include meta *.yaml
+
+# Documentation
+recursive-include docs *.rst
+recursive-include docs *.md
+recursive-include docs *.txt
+recursive-include docs *.yml
+recursive-include docs *.yaml
+
+# Examples and playbooks
+recursive-include examples *.yml
+recursive-include examples *.yaml
+recursive-include examples *.ini
+
+# ========================================
+# TESTING INFRASTRUCTURE
+# ========================================
+
+# Unit tests
+recursive-include tests/unit *.py
+recursive-include tests/unit *.yml
+recursive-include tests/unit *.yaml
+
+# Integration tests
+recursive-include tests/integration *.py
+recursive-include tests/integration *.yml
+recursive-include tests/integration *.yaml
+recursive-include tests/integration *.cfg
+recursive-include tests/integration *.md
+recursive-include tests/integration *.sh
+
+# Test configuration files
+include tests/integration/ansible.cfg
+include tests/integration/inventory.networking
+include tests/integration/network-integration.cfg
+
+# ========================================
+# DEVELOPMENT AND QUALITY TOOLS
+# ========================================
+
+# Linting and formatting configuration
+include .flake8
+include .isort.cfg
+include .yamllint
+include .pre-commit-config.yaml
+include codecov.yml
+
+# Testing framework configuration
+include pytest.ini
+
+# ========================================
+# EXCLUDE PATTERNS - Files to Omit
+# ========================================
+
+# System and editor files
+global-exclude .DS_Store
+global-exclude Thumbs.db
+global-exclude *.swp
+global-exclude *.swo
+global-exclude *~
+global-exclude .*.swp
+global-exclude .*.swo
+
+# Version control
+global-exclude .git*
+global-exclude .svn*
+global-exclude .hg*
+
+# Python bytecode and cache
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude __pycache__
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+
+# Virtual environments
+global-exclude .venv
+global-exclude venv
+global-exclude .virtualenv
+global-exclude virtualenv
+
+# IDE and editor directories
+global-exclude .vscode
+global-exclude .idea
+global-exclude *.sublime-*
+
+# Build and distribution artifacts
+global-exclude build
+global-exclude dist
+global-exclude *.egg-info
+global-exclude .eggs
+
+# Testing artifacts
+global-exclude .pytest_cache
+global-exclude .coverage
+global-exclude htmlcov
+global-exclude .tox
+global-exclude .mypy_cache
+
+# Temporary and log files
+global-exclude *.log
+global-exclude *.tmp
+global-exclude *.temp
+global-exclude .tmp*
+
+# Backup files
+global-exclude *.backup
+global-exclude *.bak
+global-exclude *.orig
+
+# Collection build artifacts
+global-exclude *.tar.gz
+global-exclude drivenets-dnos-*.tar.gz
+
+# ========================================
+# CONDITIONAL INCLUDES
+# ========================================
+
+# Include any additional YAML files in root
+include *.yml
+include *.yaml
+
+# Include any shell scripts for automation
+include *.sh
+
+# Include any text documentation
+include *.txt
+include *.md
+
+# ========================================
+# NOTES
+# ========================================
+# This MANIFEST.in ensures:
+# 1. All essential collection files are packaged
+# 2. Development and testing infrastructure is included
+# 3. Unnecessary files are excluded to keep package clean
+# 4. Build artifacts and temporary files are omitted
+# 5. Package size is optimized for distribution

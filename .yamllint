@@ -1,0 +1,37 @@
+---
+extends: default
+
+ignore: |
+  .tox
+  .venv
+  venv
+  .history
+  build
+  dist
+  specs
+  changelogs
+  .git
+  __pycache__
+  .pytest_cache
+  .mypy_cache
+  *.egg-info
+  ansible_collections
+
+rules:
+  braces:
+    max-spaces-inside: 1
+    level: error
+  brackets:
+    max-spaces-inside: 1  
+    level: error
+  line-length: disable
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: false
+  trailing-spaces: disable
+  truthy:
+    allowed-values: ['true', 'false', 'on']
+    check-keys: false
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true

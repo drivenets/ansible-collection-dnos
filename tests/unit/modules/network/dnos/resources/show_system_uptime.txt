@@ -1,0 +1,7 @@
+System Name: TestRouter
+Time Source: ntp
+Current Time: 28-Nov-2025 13:27:34 UTC
+System Start Time: 21-Nov-2025 13:16:28 UTC
+System Uptime: 7 days, 0:11:05
+System Boot Uptime: N/A
+

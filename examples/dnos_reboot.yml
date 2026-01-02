@@ -1,0 +1,13 @@
+---
+# Example playbook demonstrating DNOS reboot usage
+
+# Restart router
+# ----------------------------------------------------------------------------
+- name: DNOS reboot Example
+  hosts: dnos_devices
+  gather_facts: false
+  connection: network_cli
+  tasks:
+    - name: Restart router
+      drivenets.dnos.dnos_reboot:
+        reboot: true

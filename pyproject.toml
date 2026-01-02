@@ -1,0 +1,262 @@
+[project]
+name = "drivenets.dnos"
+version = "1.0.0"
+description = "Ansible Network Collection for DriveNets DNOS devices"
+authors = [
+    {name = "Ansible Network Community", email = "ansible-network@googlegroups.com"},
+    {name = "Ansible Drivenets Team", email = "support@drivenets.com"}
+]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators", 
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Networking",
+    "Topic :: System :: Systems Administration",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Framework :: Ansible",
+]
+keywords = ["ansible", "networking", "dnos", "drivenets", "automation", "netconf"]
+
+dependencies = [
+    "ansible-core>=2.16.0",
+    "ncclient>=0.6.13",
+    "paramiko>=2.12.0", 
+    "ansible-pylibssh>=1.1.0",
+    "PyYAML>=6.0.0",
+    "requests>=2.25.0",
+    "urllib3>=1.26.0",
+    "typing-extensions>=4.0.0",
+    "xmltodict>=1.0.2",
+    "jxmlease>=1.0.3",
+]
+
+[project.optional-dependencies]
+# Full development environment with Ansible team-devtools
+dev = [
+    # Ansible DevTools Core
+    "ansible-dev-tools>=24.0.0",
+    "ansible-lint>=24.0.0",
+    "ansible-compat>=4.0.0",
+    "molecule>=6.0.0",
+    "ansible-creator>=24.0.0",
+    "tox-ansible>=24.0.0",
+    
+    # Testing Framework
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "pytest-ansible>=4.0.0",
+    "pytest-xdist>=3.0.0",
+    "pytest-html>=3.0.0",
+    
+    # Code Quality
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "pylint>=2.17.0",
+    "mypy>=1.5.0",
+    "yamllint>=1.32.0",
+    "pre-commit>=3.3.0",
+    
+    # Documentation
+    "sphinx>=7.0.0",
+    "sphinx-rtd-theme>=1.3.0",
+    "sphinx-ansible-theme>=0.9.0",
+    "antsibull-docs>=1.10.0",
+    
+    # Type Stubs
+    "types-PyYAML>=6.0.0",
+    "types-requests>=2.31.0",
+    "types-paramiko>=3.3.0",
+    
+    # Security & Analysis
+    "bandit>=1.7.5",
+    "safety>=2.3.0",
+    "coverage[toml]>=7.0.0",
+]
+
+# Minimal testing dependencies
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0", 
+    "pytest-mock>=3.10.0",
+    "pytest-ansible>=4.0.0",
+    "ansible-core>=2.16.0",
+]
+
+# Documentation building
+docs = [
+    "sphinx>=7.0.0",
+    "sphinx-rtd-theme>=1.3.0",
+    "sphinx-ansible-theme>=0.9.0",
+    "antsibull-docs>=1.10.0",
+]
+
+# Code quality only
+lint = [
+    "ansible-lint>=24.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "pylint>=2.17.0",
+    "mypy>=1.5.0",
+    "yamllint>=1.32.0",
+]
+
+# Container development
+container = [
+    "ansible-runner>=2.3.0",
+    "ansible-builder>=3.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/ansible-collections/drivenets.dnos"
+Repository = "https://github.com/ansible-collections/drivenets.dnos"
+Documentation = "https://github.com/ansible-collections/drivenets.dnos"
+"Bug Tracker" = "https://github.com/ansible-collections/drivenets.dnos/issues"
+
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools-scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "plugins"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["plugins"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "network: marks tests that require network access",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py311', 'py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+lines_after_imports=2
+lines_between_types=1
+known_first_party = ["ansible_collections.drivenets.dnos"]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+skip_glob = [
+    "*.eggs/*",
+    "*/.git/*", 
+    "*/.mypy_cache/*",
+    "*/.pytest_cache/*",
+    "*/.venv/*",
+    "*/build/*",
+    "*/dist/*",
+    "*/.history/*",
+    "*/node_modules/*",
+    "*/__pycache__/*",
+    "*/venv/*",
+    "*/.env/*",
+    "*/specs/*",
+    "*/.tox/*",
+    "*/typings/*",
+    "*/.cursor/*",
+    "*/tmp/*"
+]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+disallow_incomplete_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+strict_equality = true
+
+# Support for namespace packages
+namespace_packages = true
+explicit_package_bases = true
+
+# Ansible collection specific
+[[tool.mypy.overrides]]
+module = "ansible_collections.*"
+ignore_errors = true
+
+# External dependencies without stubs
+[[tool.mypy.overrides]]
+module = [
+    "ncclient.*",
+    "paramiko.*",
+    "ansible.*",
+]
+ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["plugins"]
+omit = [
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/.*",
+    "*/build/*",
+    "*/dist/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.bandit]
+exclude_dirs = ["tests", "build", "dist"]
+skips = ["B101", "B601"]  # Allow assert and shell usage in specific contexts
+
+[tool.bandit.assert_used]
+skips = ["**/test_*.py", "**/tests/*.py"]

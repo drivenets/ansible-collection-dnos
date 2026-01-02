@@ -1,0 +1,15 @@
+Access Lists - Ipv4
+
+| Access-list name   | Index   | Type   | Nexthop1   | Next-Table   | VRF   | Protocol   | Src Ports   | Src IP   | Dest Ports   | Dest IP   | Dscp   | Packet Length   | QoS TCM   | Description   | Log   | CIR (mbps)   | CBS (kbytes)   |
+|--------------------+---------+--------+------------+--------------+-------+------------+-------------+----------+--------------+-----------+--------+-----------------+-----------+---------------+-------+--------------+----------------|
+
+Access Lists - Ipv6
+
+| Access-list name   | Index   | Type   | Nexthop1   | Next-Table   | VRF   | Protocol   | Src Ports   | Src IP   | Dest Ports   | Dest IP   | Dscp   | Packet Length   | QoS TCM   | Description   | Log   | CIR (mbps)   | CBS (kbytes)   |
+|--------------------+---------+--------+------------+--------------+-------+------------+-------------+----------+--------------+-----------+--------+-----------------+-----------+---------------+-------+--------------+----------------|
+
+Access Lists - Ethernet
+
+| Access-list name   | Index   | Type   | Src-mac    | Dest-mac   | Ether-type   | Packet-type   | Inner-vlan   | Outer-vlan   | Description   |
+|--------------------+---------+--------+------------+------------+--------------+---------------+--------------+--------------+---------------|
+

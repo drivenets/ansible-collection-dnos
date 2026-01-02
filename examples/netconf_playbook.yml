@@ -1,0 +1,309 @@
+---
+# Example playbook demonstrating NETCONF operations for DNOS devices
+# Uses both ansible.netcommon.netconf_* modules and direct netconf_* shortcuts
+- name: DNOS NETCONF Operations Examples
+  hosts: dnos_devices
+  gather_facts: false
+  connection: netconf
+
+  vars:
+    # YANG namespace definitions for DNOS data models
+    ns_dn_top: "http://drivenets.com/ns/yang/dn-top"
+    ns_if: "http://drivenets.com/ns/yang/dn-interfaces"
+
+  tasks:
+
+    # ============================================================================
+    # NETCONF GET OPERATIONS - Retrieving Configuration Data
+    # ============================================================================
+
+    - name: Retrieve NETCONF server capabilities
+      ansible.netcommon.netconf_get:
+        # filter: YANG filter to retrieve specific data (subtree or XPath)
+        # This retrieves the list of NETCONF capabilities supported by the server
+        filter: |
+          <netconf-state xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">
+            <capabilities><capability/></capabilities>
+          </netconf-state>
+        # display: Output format (xml, native, json, pretty)
+        display: xml
+
+    - name: Get management route configuration from running datastore
+      ansible.netcommon.netconf_get:
+        # source: Datastore to retrieve data from (running, candidate, startup)
+        source: running
+        # filter: Subtree filter to retrieve specific YANG path (management-route config)
+        filter: |
+              <dn-top:drivenets-top xmlns:dn-top="http://drivenets.com/ns/yang/dn-top">
+                <dn-system:system xmlns:dn-system="http://drivenets.com/ns/yang/dn-system"> 
+                  <dn-oob-mgmt-route:management-route xmlns:dn-oob-mgmt-route="http://drivenets.com/ns/yang/dn-oob-mgmt-route">
+                  </dn-oob-mgmt-route:management-route>
+                </dn-system:system>
+              </dn-top:drivenets-top>
+        # display: native format returns structured data without XML wrapper
+        display: native
+
+    - name: Get system configuration from running datastore
+      ansible.netcommon.netconf_get:
+        # source: Running datastore contains the current active configuration
+        source: running
+        # filter: Subtree filter to retrieve system-level configuration
+        filter: |
+          <drivenets-top xmlns="http://drivenets.com/ns/yang/dn-top" xmlns:dn-sys="http://drivenets.com/ns/yang/dn-system">
+            <dn-sys:system>
+            </dn-sys:system>
+          </drivenets-top>
+        display: native
+
+    - name: Get bundle-7 interface configuration from candidate datastore
+      ansible.netcommon.netconf_get:
+        # source: Candidate datastore contains uncommitted configuration changes
+        source: candidate
+        # filter: Retrieves specific interface configuration (bundle-7)
+        filter: |
+            <drivenets-top xmlns="http://drivenets.com/ns/yang/dn-top" xmlns:dn-if="http://drivenets.com/ns/yang/dn-interfaces" xmlns:dn-ip="http://drivenets.com/ns/yang/dn-if-ip">
+              <dn-if:interfaces>
+                <dn-if:interface>
+                  <dn-if:name>bundle-7</dn-if:name>
+                </dn-if:interface>
+              </dn-if:interfaces>
+            </drivenets-top>
+        display: native
+
+    - name: Get mgmt0 interface configuration using XPath filter
+      ansible.netcommon.netconf_get:
+        # source: Datastore to query
+        source: running
+        # filter: XPath expression to select specific interface by name
+        # XPath provides more powerful filtering than subtree filters
+        filter: "/dn-top:drivenets-top/dn-if:interfaces/dn-if:interface[dn-if:name='mgmt0']"
+        display: xml
+
+    # ============================================================================
+    # NETCONF RPC OPERATIONS - Direct RPC Calls
+    # ============================================================================
+
+    - name: Get mgmt0 interface configuration using XPath via raw RPC
+      ansible.netcommon.netconf_rpc:
+        # rpc: NETCONF RPC operation to execute (get-config retrieves configuration)
+        rpc: get-config
+        # xmlns: XML namespace for the RPC operation (NETCONF base namespace)
+        xmlns: "urn:ietf:params:xml:ns:netconf:base:1.0"
+        # content: RPC parameters including source and XPath filter
+        # This demonstrates using XPath filter with explicit namespace declarations
+        content: |
+          <source><running/></source>
+          <filter type="xpath"
+                  select="/dn-top:drivenets-top/dn-if:interfaces/dn-if:interface[dn-if:name='mgmt0']"
+                  xmlns:dn-top="http://drivenets.com/ns/yang/dn-top"
+                  xmlns:dn-if="http://drivenets.com/ns/yang/dn-interfaces"/>
+        display: xml
+
+    - name: Retrieve entire running configuration via netconf_rpc
+      ansible.netcommon.netconf_rpc:
+        # rpc: get-config RPC retrieves configuration from specified datastore
+        rpc: get-config
+        xmlns: "urn:ietf:params:xml:ns:netconf:base:1.0"
+        # content: Specifies running datastore (no filter = entire config)
+        content: |
+          <source>
+            <running/>
+          </source>
+        # display: pretty format provides formatted, human-readable output
+        display: pretty
+
+    - name: Get management route configuration using subtree filter via netconf_rpc
+      ansible.netcommon.netconf_rpc:
+        # rpc: get operation retrieves both config and state data
+        # (get-config retrieves only configuration data)
+        rpc: get
+        xmlns: "urn:ietf:params:xml:ns:netconf:base:1.0"
+        # content: Subtree filter specifying exact YANG path to retrieve
+        content: |
+          <filter type="subtree">
+            <dn-top:drivenets-top xmlns:dn-top="http://drivenets.com/ns/yang/dn-top">
+              <dn-system:system xmlns:dn-system="http://drivenets.com/ns/yang/dn-system"> 
+                <dn-oob-mgmt-route:management-route xmlns:dn-oob-mgmt-route="http://drivenets.com/ns/yang/dn-oob-mgmt-route">
+                </dn-oob-mgmt-route:management-route>
+              </dn-system:system>
+            </dn-top:drivenets-top>
+          </filter>
+        # display: json format returns data in JSON structure
+        display: json
+
+    - name: Execute DNOS show-system RPC command
+      ansible.netcommon.netconf_rpc:
+        # rpc: Vendor-specific RPC operation (show-system is DNOS-specific)
+        rpc: show-system
+        # xmlns: DNOS RPC namespace for vendor-specific operations
+        xmlns: "http://drivenets.com/ns/yang/dn-rpc"
+
+    - name: Validate candidate configuration without committing
+      ansible.netcommon.netconf_rpc:
+        # rpc: validate operation checks candidate configuration for errors
+        # Does not apply changes, only validates syntax and constraints
+        rpc: validate
+        xmlns: "urn:ietf:params:xml:ns:netconf:base:1.0"
+        # content: Specifies candidate datastore to validate
+        content: |
+          <source>
+            <candidate/>
+          </source>
+        display: pretty
+
+    # ============================================================================
+    # NETCONF CONFIG OPERATIONS - Modifying Configuration
+    # ============================================================================
+
+    - name: Merge bundle-8 LAG interface configuration into candidate
+      ansible.netcommon.netconf_config:
+        # target: Datastore to modify (candidate allows review before commit)
+        target: candidate
+        # default_operation: merge combines new config with existing (vs replace)
+        # Use merge to add/update config without removing unrelated settings
+        default_operation: merge
+        # content: XML configuration data to apply (wrapped in <config> element)
+        content: |
+          <config>
+            <drivenets-top xmlns="{{ ns_dn_top }}" xmlns:dn-if="{{ ns_if }}">
+              <dn-if:interfaces>
+                <dn-if:interface>
+                  <dn-if:name>bundle-8</dn-if:name>
+                  <config-items><type>ieee8023adLag</type></config-items>
+                </dn-if:interface>
+              </dn-if:interfaces>
+            </drivenets-top>
+          </config>
+        # get_filter: Retrieves specific data after applying config (for verification)
+        get_filter: |
+          <drivenets-top xmlns="{{ ns_dn_top }}" xmlns:dn-if="{{ ns_if }}">
+            <dn-if:interfaces><dn-if:interface><dn-if:name>bundle-7</dn-if:name></dn-if:interface></dn-if:interfaces>
+          </drivenets-top>
+
+    - name: Merge bundle-8 LAG interface configuration with diff support
+      ansible.netcommon.netconf_config:
+        # target: candidate datastore for staged changes
+        target: candidate
+        # default_operation: merge operation to combine with existing config
+        default_operation: merge
+        # Note: Run playbook with --diff flag to see configuration differences
+        content: |
+          <config>
+            <drivenets-top xmlns="http://drivenets.com/ns/yang/dn-top" xmlns:dn-if="http://drivenets.com/ns/yang/dn-interfaces">
+              <dn-if:interfaces>
+                <dn-if:interface>
+                  <dn-if:name>bundle-8</dn-if:name>
+                  <config-items><type>ieee8023adLag</type></config-items>
+                </dn-if:interface>
+              </dn-if:interfaces>
+            </drivenets-top>
+          </config>
+        # get_filter: Retrieves all interfaces to verify changes
+        get_filter: |
+            <drivenets-top xmlns="http://drivenets.com/ns/yang/dn-top" xmlns:dn-if="http://drivenets.com/ns/yang/dn-interfaces">
+              <dn-if:interfaces>
+                <dn-if:interface>
+                </dn-if:interface>
+              </dn-if:interfaces>
+            </drivenets-top>
+
+    - name: Apply bundle-8 configuration to candidate without committing
+      ansible.netcommon.netconf_config:
+        # target: candidate datastore for uncommitted changes
+        target: candidate
+        # commit: false stages changes without applying them to running config
+        # Allows review and validation before final commit
+        commit: false
+        content: |
+          <config>
+            <drivenets-top xmlns="http://drivenets.com/ns/yang/dn-top" xmlns:dn-if="http://drivenets.com/ns/yang/dn-interfaces">
+              <dn-if:interfaces>
+                <dn-if:interface>
+                  <dn-if:name>bundle-8</dn-if:name>
+                  <config-items><type>ieee8023adLag</type></config-items>
+                </dn-if:interface>
+              </dn-if:interfaces>
+            </drivenets-top>
+          </config>
+
+    - name: Configure bundle-7 LAG interface with validation and commit
+      ansible.netcommon.netconf_config:
+        # content: Configuration to apply (no explicit target defaults to candidate)
+        content: |
+          <config>
+            <drivenets-top xmlns="http://drivenets.com/ns/yang/dn-top" xmlns:dn-if="http://drivenets.com/ns/yang/dn-interfaces" xmlns:dn-ip="http://drivenets.com/ns/yang/dn-if-ip">
+              <dn-if:interfaces>
+                <dn-if:interface>
+                  <dn-if:name>bundle-7</dn-if:name>
+                  <config-items>
+                    <type>ieee8023adLag</type>
+                  </config-items>
+                </dn-if:interface>
+              </dn-if:interfaces>
+            </drivenets-top>
+          </config>
+        # commit: true automatically commits changes to running configuration
+        commit: true
+        # validate: true validates configuration before committing (catches errors early)
+        validate: true
+
+    # ============================================================================
+    # COMMIT CONFIRM WORKFLOW - Safe Configuration Changes
+    # ============================================================================
+
+    - name: Configure bundle-70 LAG interface with confirmed commit (120s timeout)
+      ansible.netcommon.netconf_config:
+        content: |
+          <config>
+            <drivenets-top xmlns="http://drivenets.com/ns/yang/dn-top" xmlns:dn-if="http://drivenets.com/ns/yang/dn-interfaces" xmlns:dn-ip="http://drivenets.com/ns/yang/dn-if-ip">
+              <dn-if:interfaces>
+                <dn-if:interface>
+                  <dn-if:name>bundle-70</dn-if:name>
+                  <config-items>
+                    <type>ieee8023adLag</type>
+                  </config-items>
+                </dn-if:interface>
+              </dn-if:interfaces>
+            </drivenets-top>
+          </config>
+        # commit: true applies changes immediately
+        commit: true
+        # confirm: Timeout in seconds before automatic rollback if not confirmed
+        # Provides safety net - config auto-reverts if connection is lost or issues occur
+        confirm: 120
+
+    - name: Confirm pending commit to make it permanent
+      ansible.netcommon.netconf_config:
+        # confirm_commit: true confirms the pending commit before timeout expires
+        # Prevents automatic rollback and makes changes permanent
+        confirm_commit: true
+
+    # ============================================================================
+    # ROLLBACK OPERATIONS - Reverting Configuration Changes
+    # ============================================================================
+
+    - name: Rollback to previous configuration and commit
+      ansible.netcommon.netconf_rpc:
+        # rpc: rollback reverts to a previous committed configuration
+        rpc: rollback
+        # content: index specifies how many commits to roll back (1 = previous commit)
+        content: '<index>1</index>'
+        xmlns: "urn:ietf:params:xml:ns:netconf:base:1.0"
+
+    - name: Commit the rollback
+      ansible.netcommon.netconf_rpc:
+        # rpc: commit applies the rollback to running configuration
+        rpc: commit
+        xmlns: "urn:ietf:params:xml:ns:netconf:base:1.0"
+
+    # ============================================================================
+    # SYSTEM OPERATIONS - Device Management
+    # ============================================================================
+
+    - name: Reboot the router
+      ansible.netcommon.netconf_rpc:
+        # rpc: request-system-restart RPC operation restarts the device
+        # This will disconnect the NETCONF session and reboot the router
+        rpc: request-system-restart
+        # xmlns: DNOS RPC namespace for vendor-specific operations
+        xmlns: "http://drivenets.com/ns/yang/dn-rpc"

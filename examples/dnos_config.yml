@@ -1,0 +1,162 @@
+---
+# ============================================================================
+# DNOS Configuration Module Examples
+# ============================================================================
+# This file demonstrates various usage patterns for drivenets.dnos.dnos_config
+# module to configure DriveNets DNOS devices.
+#
+
+# ----------------------------------------------------------------------------
+# 1. BASIC CONFIGURATION EXAMPLES
+# ----------------------------------------------------------------------------
+
+# Simple single-line configuration
+# Uses default commit=true to apply changes immediately
+- name: DNOS Configuration Example
+  hosts: dnos_devices
+  gather_facts: false
+  connection: network_cli
+  tasks:
+    # Save config on the router
+    - name: Save candidate configuration
+      drivenets.dnos.dnos_config:
+        lines: |
+          interfaces ge100-0/0/8
+            mtu 9000
+            ipv4-address 10.0.0.1/24
+            description "Test Interface ge100-0/0/8"
+        commit: false
+        save: interface_ge100.0.0.8_config
+
+    - name: Set device hostname
+      drivenets.dnos.dnos_config:
+        lines:
+          - system name TestRouter2
+
+    # ----------------------------------------------------------------------------
+    # 2. HIERARCHICAL CONFIGURATION WITH CONTEXT
+    # ----------------------------------------------------------------------------
+
+    # Configure child commands under a parent hierarchy
+    # 'parents' specifies the parent context for the configuration lines
+    # 'backup': Create backup of running config before changes
+    - name: Configure interface with backup
+      drivenets.dnos.dnos_config:
+        lines:
+          - admin-state enabled
+          - mtu 9000
+          - ipv4-address 10.0.0.1/24
+          - description "Test Interface ge100-0/0/8"
+        parents: interfaces ge100-0/0/8
+        backup: true
+
+    # ----------------------------------------------------------------------------
+    # 3. DIFF AND IDEMPOTENCY CHECKS
+    # ----------------------------------------------------------------------------
+
+    # Compare proposed changes against running configuration
+    # Shows what would change before committing
+    - name: Display configuration diff with commit message
+      drivenets.dnos.dnos_config:
+        lines:
+          - system name TestRouter
+        diff_against: running
+        comment: "change system name"
+
+    # Check compliance against intended/desired state
+    # 'commit: false' prevents changes, only shows diff
+    # 'lines' is omitted because the candidate config is constructed from intended_config
+    - name: Verify control node configuration compliance
+      drivenets.dnos.dnos_config:
+        diff_against: intended
+        commit: false
+        intended_config: "{{ lookup('file', './resources/control_node_config.cfg') }}"
+
+    # ----------------------------------------------------------------------------
+    # 4. STAGED CONFIGURATION (COMMIT CONTROL)
+    # ----------------------------------------------------------------------------
+
+    # Stage configuration in candidate without committing
+    # Upon task completion the candidate config is discarded and the running config is restored
+    - name: Stage hostname change in candidate configuration
+      drivenets.dnos.dnos_config:
+        lines:
+          - system name NoCommitRouter
+        commit: false
+
+    # ----------------------------------------------------------------------------
+    # 5. LOAD CONFIGURATION FROM DEVICE FILES
+    # ----------------------------------------------------------------------------
+    # Load config files that are stored on the device itself
+    # 'url' specifies file path visible to 'show file config list'
+
+    # Define a config file name and save running config to it
+    - name: Define config file name
+      ansible.builtin.set_fact:
+        replace_test_cfg: "ansible_test_config_file.{{ (100 | random + 100) }}.config"
+
+    # Save running config into a file on the device
+    - name: Save running config into file
+      drivenets.dnos.dnos_config:
+        lines:
+          - save "{{ replace_test_cfg }}"
+        commit: false
+
+    # Replace entire running configuration from device file
+    # WARNING: This replaces ALL configuration - use with caution
+    - name: Load complete configuration from device file (override)
+      drivenets.dnos.dnos_config:
+        load: override
+        url: "{{ replace_test_cfg }}"
+
+
+    # ----------------------------------------------------------------------------
+    # 6. COMMIT CONFIRM (SAFE CONFIGURATION CHANGES)
+    # ----------------------------------------------------------------------------
+    # Commit confirm automatically rolls back changes if not confirmed
+    # Useful for remote changes to prevent lockout
+
+    # Apply configuration with automatic rollback timer
+    # Changes will be rolled back in 10 minutes unless confirmed
+    - name: Apply AAA configuration with 10-minute auto-rollback
+      drivenets.dnos.dnos_config:
+        comment: "apply aaa-server config"
+        lines: |
+          no system aaa-server
+          system
+            aaa-server
+              admin-state disabled
+              authentication-order aaa-local
+              fallback-on-reject enabled
+            !
+          !
+        confirm: 10
+
+    # Confirm the pending commit to prevent automatic rollback
+    # Run this after verifying the configuration works correctly
+    - name: Confirm pending configuration commit
+      drivenets.dnos.dnos_config:
+        confirm_commit: true
+
+    # Rollback to a specific configuration version
+    # Use 'rollback: 0' for most recent commit
+    - name: Rollback to previous configuration version 1
+      drivenets.dnos.dnos_config:
+        rollback: 1
+
+    # Apply configuration with automatic rollback timer (duplicate example)
+    # Changes will be rolled back in 10 minutes unless confirmed
+    # Note: This example demonstrates the same pattern as above
+    - name: Apply AAA configuration with 10-minute auto-rollback (duplicate example)
+      drivenets.dnos.dnos_config:
+        comment: "apply aaa-server config"
+        lines: |
+          no system aaa-server
+          system
+            aaa-server
+              admin-state disabled
+              authentication-order aaa-local
+              fallback-on-reject enabled
+            !
+          !
+        confirm: 10

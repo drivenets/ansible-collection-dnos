@@ -1,0 +1,33 @@
+---
+
+requires_ansible: '>=2.16.0'
+
+plugin_routing:
+
+  modules:
+
+    # Legacy module routing for backwards compatibility
+
+    command:
+
+      redirect: drivenets.dnos.dnos_command
+
+    config:
+
+      redirect: drivenets.dnos.dnos_config
+
+    facts:
+
+      redirect: drivenets.dnos.dnos_facts
+
+action_groups:
+
+  dnos:
+
+    - dnos_command
+
+    - dnos_config
+
+    - dnos_facts
+
+    - dnos_interfaces

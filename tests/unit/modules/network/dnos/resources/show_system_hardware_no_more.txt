@@ -1,0 +1,148 @@
+ncc 0 (dn-ncc-0)
+
+Model: NCP-VR
+
+Hardware Model: DELL PowerEdge R740xd
+
+Serial Number: cdnos1
+
+Chassis MAC: n/a
+
+Host Name: cdnos1
+
+Host Operating System: DriveNets BaseOS 2.18301234567
+
+ONIE version: N/A
+
+Hardware Information:
+
+| Item          | Value                                      |
+|---------------+--------------------------------------------|
+| CPU Model     | Intel(R) Xeon(R) Silver 4216 CPU @ 2.10GHz |
+| Hyper-Threads | 64 (2 per Core)                            |
+
+CPU Usage:
+
+| CPU   | Use %   |
+|-------+---------|
+| 0     | 5       |
+| 1     | 9       |
+| 2     | 11      |
+| 3     | 8       |
+| 4     | 9       |
+| 5     | 7       |
+| 6     | 8       |
+| 7     | 9       |
+| 8     | 21      |
+| 9     | 7       |
+| 10    | 7       |
+| 11    | 7       |
+| 12    | 7       |
+| 13    | 10      |
+| 14    | 8       |
+| 15    | 7       |
+| 16    | 7       |
+| 17    | 13      |
+| 18    | 11      |
+| 19    | 8       |
+| 20    | 6       |
+| 21    | 7       |
+| 22    | 13      |
+| 23    | 14      |
+| 24    | 6       |
+| 25    | 6       |
+| 26    | 8       |
+| 27    | 19      |
+| 28    | 9       |
+| 29    | 7       |
+| 30    | 7       |
+| 31    | 10      |
+| 32    | 5       |
+| 33    | 12      |
+| 34    | 8       |
+| 35    | 9       |
+| 36    | 7       |
+| 37    | 10      |
+| 38    | 7       |
+| 39    | 7       |
+| 40    | 8       |
+| 41    | 10      |
+| 42    | 10      |
+| 43    | 7       |
+| 44    | 5       |
+| 45    | 8       |
+| 46    | 6       |
+| 47    | 7       |
+| 48    | 6       |
+| 49    | 7       |
+| 50    | 15      |
+| 51    | 7       |
+| 52    | 6       |
+| 53    | 7       |
+| 54    | 9       |
+| 55    | 8       |
+| 56    | 6       |
+| 57    | 8       |
+| 58    | 9       |
+| 59    | 7       |
+| 60    | 8       |
+| 61    | 7       |
+| 62    | 7       |
+| 63    | 9       |
+
+Last 1 minute CPU load average: 8
+
+Last 5 minute CPU load average: 9
+
+Memory Usage:
+
+| Type     | Total     | Used     | Free     | Shared   | Buffers   | Cached   |
+|----------+-----------+----------+----------+----------+-----------+----------|
+| Physical | 404.28 GB | 86.57 GB | 288.3 GB | 1.1 GB   | 1.42 GB   | 27.98 GB |
+| Swap     | 0 bytes   | 0 bytes  | 0 bytes  |          |           |          |
+
+Disk Usage:
+
+| File System                       | Size      | Used     | Avail     | Use%   | Mounted on      |
+|-----------------------------------+-----------+----------+-----------+--------+-----------------|
+| /dev/loop14                       | 1.02 GB   | 8.19 KB  | 1 GB      | 1.0%   | /packet-capture |
+| /dev/loop6                        | 1.02 GB   | 61.44 KB | 950.18 MB | 1.0%   | /config         |
+| /dev/mapper/ubuntu--vg-ubuntu--lv | 210.78 GB | 91.3 GB  | 109.78 GB | 46.0%  | /core           |
+
+BIOS Version:
+	None None
+
+	BIOS Mode:
+		UEFI
+
+IPMI version:
+
+| Module   | Image 1   | Image 2   |
+|          | version   | Version   |
+|----------+-----------+-----------|
+| BMC      | NA        |           |
+
+USB Ports:
+
+Power Supply Units:
+
+Redundancy mode: None
+| PSU ID   | Present   | Status   | Serial   | Revision   | Type   | Uptime   |
+|----------+-----------+----------+----------+------------+--------+----------|
+
+Temperature alarm raised: False
+
+Temperature Sensors:
+
+| Sensor Name   | Temperature [C]   | Status   | High Warning    | High Critical   | Fan 100%             |
+|               |                   |          | Threshold [C]   | Threshold [C]   | User Threshold [C]   |
+|---------------+-------------------+----------+-----------------+-----------------+----------------------|
+
+Fans:
+
+Redundancy mode: None
+| Fan ID   | Present   | Status   | Serial Number   | Speed [RPM]   | Max RPM   | RPM %   | Uptime   |
+|----------+-----------+----------+-----------------+---------------+-----------+---------+----------|
+
+No data available for ncp0
+

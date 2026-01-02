@@ -1,0 +1,94 @@
+---
+# Example playbook demonstrating DNOS facts gathering module
+# Available gather_subset options: default, min, all, hardware, config, interfaces
+# Use "!" prefix to exclude specific subsets
+- name: DNOS Facts Gathering Examples
+  hosts: dnos_devices
+  gather_facts: false
+  connection: network_cli
+  tasks:
+
+    # ============================================================================
+    # BASIC FACT GATHERING
+    # ============================================================================
+
+    - name: Gather default device facts only
+      drivenets.dnos.dnos_facts:
+        # gather_subset: Specifies which fact subsets to collect
+        # default: Collects basic device information (hostname, version, model, serial number)
+        gather_subset: [ default ]
+
+    - name: Gather minimal device facts
+      drivenets.dnos.dnos_facts:
+        # gather_subset: min collects the absolute minimum facts needed
+        # min: Returns only essential system information (fastest option)
+        gather_subset: [ min ]
+
+    - name: Gather all available device facts
+      drivenets.dnos.dnos_facts:
+        # gather_subset: all collects comprehensive device information
+        # all: Includes default, hardware, config, interfaces, and all other available subsets
+        gather_subset: [ all ]
+
+    # ============================================================================
+    # SELECTIVE FACT GATHERING (EXCLUDING SUBSETS)
+    # ============================================================================
+
+    - name: Gather hardware-specific facts only
+      drivenets.dnos.dnos_facts:
+        # gather_subset: Use "!all" to exclude all default subsets, then add specific ones
+        gather_subset:
+          # "!all": Excludes all fact subsets (use this to start with a clean slate)
+          - "!all"
+          # hardware: Collects hardware information (memory, CPU, disk, chassis details)
+          - hardware
+
+    - name: Gather device configuration facts
+      drivenets.dnos.dnos_facts:
+        gather_subset:
+          # "!all": Excludes all default fact collection
+          - "!all"
+          # config: Retrieves the current running and startup configuration
+          - config
+
+    - name: Gather all facts except hardware information
+      drivenets.dnos.dnos_facts:
+        # gather_subset: Collect all facts but exclude specific subsets
+        gather_subset:
+          # all: Collects all available facts
+          - all
+          # "!hardware": Excludes hardware-specific facts (useful when hardware info is not needed)
+          - "!hardware"
+
+    # ============================================================================
+    # COMBINED FACT GATHERING
+    # ============================================================================
+
+    - name: Gather default facts and interface information
+      drivenets.dnos.dnos_facts:
+        # gather_subset: Combine multiple subsets to collect specific information
+        # default: Basic device information
+        # interfaces: Interface status, configuration, and statistics
+        gather_subset: [ default, interfaces ]
+
+    # ============================================================================
+    # NETWORK RESOURCE FACTS
+    # ============================================================================
+
+    - name: Gather only interfaces network resource facts (exclude all default subsets)
+      drivenets.dnos.dnos_facts:
+        gather_subset:
+          # "!all": Exclude all default fact subsets to only collect network resources
+          - "!all"
+        # gather_network_resources: Collects structured data for specific network resources
+        # interfaces: Returns detailed interface configuration in a structured format
+        # Useful for programmatic access to interface data (ACLs, VLANs, IP addresses, etc.)
+        gather_network_resources: interfaces
+
+    - name: Gather minimal facts with interfaces network resource
+      drivenets.dnos.dnos_facts:
+        # gather_subset: Collect minimal system facts
+        gather_subset: [ min ]
+        # gather_network_resources: Add structured interface data to minimal facts
+        # This combination provides basic system info plus detailed interface configuration
+        gather_network_resources: interfaces

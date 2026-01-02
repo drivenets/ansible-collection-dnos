@@ -1,0 +1,2023 @@
+
+interfaces
+  lo0
+    admin-state enabled
+    description "LOG|LOOPBACK|L3|CORE|type:IPV4-RID"
+    ipv4-address 96.109.183.47/32
+  !
+  lo60
+    admin-state enabled
+    description "LOG|LOOPBACK|L3|CORE|type:IPV6-RID"
+    ipv6-address 2001:558:4c0:0:3000::47/128
+  !
+  lo99
+    admin-state enabled
+    description "LOG|LOOPBACK|L3|CORE|type:IPV4-MCAST"
+    ipv4-address 96.109.183.232/32
+  !
+  lo999
+    admin-state enabled
+    description "LOG|LOOPBACK|L3|CORE|type:DEVICE-MGMT"
+    ipv4-address 96.109.251.175/32
+    ipv6-address 2001:558:4c0:0:3100::47/128
+  !
+  lo4001
+    admin-state enabled
+    description "LOG|LOOPBACK|L3|CORE|type:IPV4-ANYCAST|link-group:ASBR-AR"
+    ipv4-address 96.109.183.227/32
+  !
+  lo6001
+    admin-state enabled
+    description "LOG|LOOPBACK|L3|CORE|type:IPV6-ANYCAST|link-group:ASBR-AR"
+    ipv6-address 2001:558:4c0:0:3001::20/128
+  !
+  lo4002
+    admin-state enabled
+    description "LOG|LOOPBACK|L3|CORE|type:IPV4-ANYCAST|link-group:ASBR-ARSC"
+    ipv4-address 96.109.183.228/32
+  !
+  lo6002
+    admin-state enabled
+    description "LOG|LOOPBACK|L3|CORE|type:IPV6-ANYCAST|link-group:ASBR-ARSC"
+    ipv6-address 2001:558:4c0:0:3001::30/128
+  !
+  lo4099
+    admin-state enabled
+    description "LOG|LOOPBACK|L3|CORE|type:IPV4-ANYCAST|link-group:ASBR-CS"
+    ipv4-address 96.109.183.74/32
+  !
+  lo6099
+    admin-state enabled
+    description "LOG|LOOPBACK|L3|CORE|type:IPV4-ANYCAST|link-group:ASBR-CS"
+    ipv6-address 2001:558:4c0:0:3001::10/128
+  !
+!
+top
+system
+  login
+    banner "                                     WARNING\n                  Reminder of Acceptable Use of Comcast Systems\n\nComcast monitors the usage of this system to help us protect our customer, team\nmate and company information. All usage of Comcast Systems must comply with our\npolicies, including the Acceptable  Use  Policy  and  Cybersecurity  Standards.\nPlease note that any misuse of Comcast Systems,  or  any  unauthorized  use  or\naccess, may result in disciplinary action. Any evidence  of  criminal  activity\nwill be referred to law enforcement if deemed necessary.  Thank you for keeping\nComcast safe, secure and protected.\n"
+  !
+!
+top
+system
+  aaa-server
+    admin-state disabled
+    authentication-order aaa-local
+    fallback-on-reject enabled
+  !
+!
+top
+system
+  aaa-server
+    source-interface lo0
+    radius
+      server priority 1 address 10.248.20.7
+        authentication enabled
+        password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+        port 1645
+        vrf default
+      !
+      server priority 2 address 10.248.20.8
+        authentication enabled
+        password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+        port 1645
+        vrf default
+      !
+      timers
+        hold-down 60
+        retry-time 60
+      !
+    !
+    tacacs
+      server priority 1 address 172.27.23.87
+        accounting disabled
+        authentication disabled
+        authorization enabled
+        password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+        port 49
+        vrf default
+      !
+      server priority 2 address 172.28.122.55
+        accounting disabled
+        authentication disabled
+        authorization enabled
+        password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+        port 49
+        vrf default
+      !
+      timers
+        hold-down 60
+        retry-time 60
+      !
+    !
+  !
+!
+top
+access-lists
+  ipv4 IPV4-CONTROL-PLANE-FILTER-ACL
+    rule 10 allow src-ip 10.0.0.0/8
+    rule 20 allow src-ip 24.40.0.0/18
+    rule 30 allow src-ip 24.40.64.0/20
+    rule 40 allow src-ip 24.124.128.0/17
+    rule 50 allow src-ip 24.153.64.0/19
+    rule 60 allow src-ip 67.178.0.0/15
+    rule 70 allow src-ip 68.85.0.0/16
+    rule 80 allow src-ip 68.86.0.0/15
+    rule 90 allow src-ip 69.139.128.0/17
+    rule 100 allow src-ip 69.240.0.0/15
+    rule 110 allow src-ip 69.252.0.0/16
+    rule 120 allow src-ip 76.96.0.0/16
+    rule 130 allow src-ip 96.96.24.0/21
+    rule 140 allow src-ip 96.102.0.0/15
+    rule 150 allow src-ip 96.104.0.0/14
+    rule 160 allow src-ip 96.108.0.0/14
+    rule 170 allow src-ip 96.112.0.0/14
+    rule 180 allow src-ip 96.116.0.0/14
+    rule 190 allow src-ip 96.216.0.0/14
+    rule 200 allow src-ip 98.205.0.0/17
+    rule 210 allow src-ip 98.241.0.0/16
+    rule 220 allow src-ip 100.88.0.0/14
+    rule 230 allow src-ip 100.92.0.0/14
+    rule 240 allow src-ip 147.191.0.0/16
+    rule 250 allow src-ip 162.150.0.0/15
+    rule 260 allow src-ip 165.137.0.0/16
+    rule 270 allow src-ip 169.152.0.0/16
+    rule 280 allow src-ip 172.16.0.0/12
+    rule 290 allow src-ip 184.127.0.0/16
+    rule 300 allow src-ip 198.178.8.0/21
+  !
+  ipv6 IPV6-CONTROL-PLANE-FILTER-ACL
+    rule 10 allow src-ip 2001:558::/35
+    rule 20 allow src-ip 2001:558:fe00::/39
+    rule 30 allow src-ip 2001:558:fc00::/39
+    rule 40 allow src-ip 2001:55a::/32
+    rule 50 allow src-ip 2600:1f14:e0f:af00::/64
+    rule 60 allow src-ip 2600:1f18:6de:e800::/64
+    rule 70 allow src-ip 2a0c:93c0:c000::/36
+    rule 80 allow src-ip 2a0c:93c0:8000::/36
+    rule 90 allow src-ip 2400:7160:1400::/40
+    rule 100 allow src-ip 2400:7160:2000::/36
+  !
+!
+system
+  in-band-management access-list ipv4 IPV4-CONTROL-PLANE-FILTER-ACL
+  in-band-management access-list ipv6 IPV6-CONTROL-PLANE-FILTER-ACL
+!
+top
+system
+  name asbr01.siteA.cran1
+  info
+    location "Janustest10"
+  !
+  dns
+    domain-name comcast.net
+    server priority 1 ip-address 69.252.80.80
+      vrf default
+    !
+    server priority 2 ip-address 69.252.81.81
+      vrf default
+    !
+  !
+!
+top
+system
+  ntp
+    source-interface lo0
+    server 68.87.31.6 vrf default
+      iburst
+      prefer
+    !
+    server 68.87.31.7 vrf default
+      iburst
+    !
+    server 68.87.66.58 vrf default
+      iburst
+    !
+    server 68.87.66.59 vrf default
+      iburst
+    !
+    server 69.252.204.140 vrf default
+      iburst
+    !
+  !
+!
+top
+services
+  flow-monitoring
+    cache-events limit 8000000 threshold 90
+    cache-rate-limit 100000
+    observation-domain-id 100
+    exporter-profile Collector
+      collector ip-address 96.99.240.132 class-of-service 48 port 9990 transport udp ttl 255
+      data-template-timeout 300
+      options interface-table timeout 300
+      options sampler-table timeout 300
+      options vrf-table timeout 1800
+      options-template-timeout 1800
+      source-interface lo0
+      version v9
+    !
+    sampler-profile flow-sample
+      rate 1-out-of 4000
+    !
+  !
+!
+top
+system
+  snmp
+    community Net9M9mt vrf default
+      access read-only
+      client-list 10.0.0.0/8
+      client-list 10.64.0.0/13
+      client-list 10.80.0.0/12
+      client-list 10.96.0.0/12
+      client-list 24.40.0.0/18
+      client-list 24.40.64.0/20
+      client-list 24.124.128.0/17
+      client-list 24.153.64.0/19
+      client-list 65.96.0.0/16
+      client-list 68.85.0.0/16
+      client-list 68.86.0.0/18
+      client-list 68.86.64.0/18
+      client-list 68.86.128.0/17
+      client-list 68.87.0.0/20
+      client-list 68.87.128.0/18
+      client-list 68.87.192.0/19
+      client-list 68.87.224.0/20
+      client-list 68.87.240.0/20
+      client-list 69.139.128.0/17
+      client-list 96.100.0.0/14
+      client-list 96.104.0.0/14
+      client-list 96.108.0.0/15
+      client-list 96.110.0.0/16
+      client-list 96.116.0.0/14
+      client-list 96.192.0.0/13
+      client-list 96.216.0.0/14
+      client-list 100.88.0.0/14
+      client-list 100.92.0.0/14
+      client-list 147.191.0.0/16
+      client-list 162.151.0.0/16
+      client-list 165.137.0.0/16
+      client-list 169.152.0.0/16
+      client-list 172.16.0.0/12
+      client-list 184.120.0.0/15
+      client-list 184.127.0.0/16
+      client-list 198.178.8.0/21
+    !
+    community Q845q8st vrf default
+      access read-only
+      client-list 10.0.0.0/8
+      client-list 10.64.0.0/13
+      client-list 10.80.0.0/12
+      client-list 10.96.0.0/12
+      client-list 24.40.0.0/18
+      client-list 24.40.64.0/20
+      client-list 24.124.128.0/17
+      client-list 24.153.64.0/19
+      client-list 65.96.0.0/16
+      client-list 68.85.0.0/16
+      client-list 68.86.0.0/18
+      client-list 68.86.64.0/18
+      client-list 68.86.128.0/17
+      client-list 68.87.0.0/20
+      client-list 68.87.128.0/18
+      client-list 68.87.192.0/19
+      client-list 68.87.224.0/20
+      client-list 68.87.240.0/20
+      client-list 69.139.128.0/17
+      client-list 96.100.0.0/14
+      client-list 96.104.0.0/14
+      client-list 96.108.0.0/15
+      client-list 96.110.0.0/16
+      client-list 96.116.0.0/14
+      client-list 96.192.0.0/13
+      client-list 96.216.0.0/14
+      client-list 100.88.0.0/14
+      client-list 100.92.0.0/14
+      client-list 147.191.0.0/16
+      client-list 162.151.0.0/16
+      client-list 165.137.0.0/16
+      client-list 169.152.0.0/16
+      client-list 172.16.0.0/12
+      client-list 184.120.0.0/15
+      client-list 184.127.0.0/16
+      client-list 198.178.8.0/21
+    !
+    trap-server 172.24.203.110 vrf default
+      source-interface lo0
+      community Net9M9mt
+      version 2c
+    !
+    trap-server 172.28.104.72 vrf default
+      source-interface lo0
+      community Q845q8st
+      version 2c
+    !
+
+    trap bfd dnBfdSessionDown enabled
+    trap bfd dnBfdSessionUp enabled
+    trap bgp bgpBackwardTransNotification enabled
+    trap bgp bgpEstablishedNotification enabled
+    trap bgp dnBgpBackwardTransition enabled
+    trap bgp dnBgpEstablished enabled
+    trap interface linkDown enabled
+    trap interface linkUp enabled
+    trap isis isisAdjacencyChange enabled
+    trap isis isisAuthenticationFailure enabled
+    trap isis isisAuthenticationTypeFailure enabled
+    trap isis isisDatabaseOverload enabled
+    trap isis isisRejectedAdjacency enabled
+    trap ldp mplsLdpSessionUp enabled
+    trap pim dnPimInterfaceDown enabled
+    trap pim dnPimInterfaceUp enabled
+    trap pim dnPimNeighborUp enabled
+    trap pim pimInvalidJoinPrune enabled
+    trap pim pimInvalidRegister enabled
+    trap pim pimNeighborLoss enabled
+    trap pim pimRPMappingChange enabled
+    trap system authenticationFailure enabled
+    trap system coldStart enabled
+    trap system entConfigChange enabled
+    trap system warmStart enabled
+    class-of-service 16
+  !
+!
+top
+system
+   timezone UTC
+   logging
+     file system-events
+       files 10
+       size 10
+     !
+     syslog
+       class-of-service 16
+       event-group all severity info
+       facility local6
+       source-interface lo0
+       server 10.145.240.132 vrf default
+         admin-state enabled
+         protocol udp
+       !
+     !
+   !
+!
+top
+routing-options
+  fec-statistics disabled
+  load-balancing
+    flow 5-tuple
+  !
+!
+top
+routing-policy
+  prefix-list ipv4 IPV4-DEFAULT-ROUTE-PFX
+    rule 10 allow 0.0.0.0/0
+  !
+  prefix-list ipv6 IPV6-DEFAULT-ROUTE-PFX
+   rule 10 allow ::/0
+  !
+!
+top
+routing-policy
+  prefix-list ipv4 IPV4-ALL-LOOPBACK-PFX
+    rule 10 allow 68.85.0.0/19 matching-len le 32
+    rule 20 allow 68.86.0.0/18 matching-len le 32
+    rule 30 allow 68.87.0.0/20 matching-len le 32
+    rule 40 allow 68.87.240.0/20 matching-len le 32
+    rule 50 allow 69.139.128.0/19 matching-len le 32
+    rule 60 allow 96.108.192.0/18 matching-len le 32
+    rule 70 allow 96.109.0.0/16 matching-len le 32
+    rule 80 allow 96.200.0.0/16 matching-len le 32
+    rule 90 allow 162.151.224.0/19 matching-len le 32
+    rule 100 allow 184.126.0.0/16 matching-len le 32
+  !
+  prefix-list ipv6 IPV6-ALL-LOOPBACK-PFX
+    rule 10 allow 2001:558:10::/64 matching-len le 128
+    rule 20 allow 2001:558:20::/64 matching-len le 128
+    rule 30 allow 2001:558:30::/64 matching-len le 128
+    rule 40 allow 2001:558:40::/64 matching-len le 128
+    rule 50 allow 2001:558:50::/64 matching-len le 128
+    rule 60 allow 2001:558:60::/64 matching-len le 128
+    rule 70 allow 2001:558:70::/64 matching-len le 128
+    rule 80 allow 2001:558:80::/64 matching-len le 128
+    rule 90 allow 2001:558:90::/64 matching-len le 128
+    rule 100 allow 2001:558:a0::/64 matching-len le 128
+    rule 110 allow 2001:558:b0::/64 matching-len le 128
+    rule 120 allow 2001:558:c0::/64 matching-len le 128
+    rule 130 allow 2001:558:d0::/64 matching-len le 128
+    rule 140 allow 2001:558:e0::/64 matching-len le 128
+    rule 150 allow 2001:558:f0::/64 matching-len le 128
+    rule 160 allow 2001:558:100::/64 matching-len le 128
+    rule 170 allow 2001:558:110::/64 matching-len le 128
+    rule 180 allow 2001:558:130::/64 matching-len le 128
+    rule 190 allow 2001:558:140::/64 matching-len le 128
+    rule 200 allow 2001:558:150::/64 matching-len le 128
+    rule 210 allow 2001:558:160::/64 matching-len le 128
+    rule 220 allow 2001:558:170::/64 matching-len le 128
+    rule 230 allow 2001:558:180::/64 matching-len le 128
+    rule 240 allow 2001:558:190::/64 matching-len le 128
+    rule 250 allow 2001:558:1a0::/64 matching-len le 128
+    rule 260 allow 2001:558:1b0::/64 matching-len le 128
+    rule 270 allow 2001:558:1c0::/64 matching-len le 128
+    rule 280 allow 2001:558:1f0::/64 matching-len le 128
+    rule 290 allow 2001:558:200::/64 matching-len le 128
+    rule 300 allow 2001:558:210::/64 matching-len le 128
+    rule 310 allow 2001:558:220::/64 matching-len le 128
+    rule 320 allow 2001:558:230::/64 matching-len le 128
+    rule 330 allow 2001:558:240::/64 matching-len le 128
+    rule 340 allow 2001:558:250::/64 matching-len le 128
+    rule 350 allow 2001:558:260::/64 matching-len le 128
+    rule 360 allow 2001:558:270::/64 matching-len le 128
+    rule 370 allow 2001:558:280::/64 matching-len le 128
+    rule 380 allow 2001:558:2c0::/64 matching-len le 128
+    rule 390 allow 2001:558:2d0::/64 matching-len le 128
+    rule 400 allow 2001:558:2e0::/64 matching-len le 128
+    rule 410 allow 2001:558:2f0::/64 matching-len le 128
+    rule 420 allow 2001:558:300::/64 matching-len le 128
+    rule 430 allow 2001:558:310::/64 matching-len le 128
+    rule 440 allow 2001:558:320::/64 matching-len le 128
+    rule 450 allow 2001:558:340::/64 matching-len le 128
+    rule 460 allow 2001:558:350::/64 matching-len le 128
+    rule 470 allow 2001:558:360::/64 matching-len le 128
+    rule 480 allow 2001:558:370::/64 matching-len le 128
+    rule 490 allow 2001:558:380::/64 matching-len le 128
+    rule 500 allow 2001:558:390::/64 matching-len le 128
+    rule 510 allow 2001:558:3b0::/64 matching-len le 128
+  !
+!
+top
+routing-policy
+  prefix-list ipv4 IPV4-BOGONS-PFX
+    rule 10 allow 0.0.0.0/0,
+    rule 20 allow 0.0.0.0/8 matching-len le 32
+    rule 30 allow 10.0.0.0/8 matching-len le 32
+    rule 40 allow 21.0.0.0/8 matching-len le 32
+    rule 50 allow 100.64.0.0/10 matching-len le 32
+    rule 60 allow 127.0.0.0/8 matching-len le 32
+    rule 70 allow 169.254.0.0/16 matching-len le 32
+    rule 80 allow 172.16.0.0/12 matching-len le 32
+    rule 90 allow 192.0.0.0/24 matching-len le 32
+    rule 100 allow 192.0.2.0/24 matching-len le 32
+    rule 110 allow 192.168.0.0/16 matching-len le 32
+    rule 120 allow 198.18.0.0/15 matching-len le 32
+    rule 130 allow 198.51.100.0/24 matching-len le 32
+    rule 140 allow 203.0.113.0/24 matching-len le 32
+    rule 150 allow 224.0.0.0/3 matching-len le 32
+  !
+  prefix-list ipv6 IPV6-BOGONS-PFX
+    rule 10 allow ::/8 matching-len le 128
+    rule 20 allow 100::/8 matching-len le 128
+    rule 30 allow 200::/7 matching-len le 128
+    rule 40 allow 400::/6 matching-len le 128
+    rule 50 allow 800::/5 matching-len le 128
+    rule 60 allow 1000::/4 matching-len le 128
+    rule 70 allow 4000::/2 matching-len le 128
+    rule 80 allow 8000::/1 matching-len le 128
+    rule 90 allow 2001:db8::/32 matching-len le 128
+  !
+!
+top
+routing-policy
+  as-path-list IS-LOCAL
+    rule 10 allow regex ^$
+  !
+  as-path-list CBONE-LEARNED-PREFIXES
+    rule 10 allow passes-through 23253
+  !
+  as-path-list LEGACY-ASPATH
+    rule 10 allow regex ^4200001220_
+  !
+  as-path-list IBONE-ASPATH
+    rule 10 allow regex ^7922_
+  !
+!
+top
+system
+  tcp
+    path-mtu-discovery
+      host
+        admin-state enabled
+      !
+      tcp-probing
+        admin-state enabled
+      !
+    !
+  !
+!
+top
+protocols
+  mpls
+    traffic-engineering
+      igp-shortcuts disabled
+      router-id 96.109.183.47
+      ipv6-router-id 2001:558:4c0:0:3000::47
+      admin-group-map
+        bit-position 1 name EAG1-FA128-BASE
+        bit-position 2 name EAG2-FA129-BASE
+        bit-position 11 name EAG11-COMM-ONLY
+        bit-position 31 name EAG31-SUPERCORE-LINK-C0
+        bit-position 32 name EAG32-SUPERCORE-LINK-C1
+        bit-position 33 name EAG33-SUB-CORE-LINK-C2
+        bit-position 34 name EAG34-INTRA-SITE-LINK
+        bit-position 35 name EAG35-PRI-SEC-SITE-LINK
+        bit-position 36 name EAG36-REMOTE-COMM-PE
+        bit-position 51 name EAG51-P1-PCR-SCR
+        bit-position 52 name EAG52-P2-PCR-SCR
+        bit-position 98 name EAG98-PRE-PRODUCTION
+        bit-position 99 name EAG99-NOT-IN-SERVICE
+        bit-position 100 name EAG100-MAINTENANCE-MODE
+      !
+    !
+  !
+!
+top
+protocols
+ segment-routing
+   mpls
+     flex-algo
+       advertise-definition JANUS-FA128
+         admin-group exclude EAG99-NOT-IN-SERVICE
+         admin-group exclude EAG98-PRE-PRODUCTION
+         admin-group exclude EAG100-MAINTENANCE-MODE
+         admin-group include-any EAG1-FA128-BASE
+         metric-type link-delay
+       !
+     !
+   !
+ !
+!
+routing-options
+  segment-routing mpls
+    global-block 400000 400000
+    local-block 15000 1000
+  !
+!
+top
+
+routing-policy
+  prefix-list ipv4 IPV4-LOOPBACK-PFX
+    rule 10 allow 96.109.183.47/32 matching-len le 32
+  !
+  prefix-list ipv6 IPV6-LOOPBACK-PFX
+    rule 10 allow 2001:558:4c0:0:3000::47/128 matching-len le 128
+  !
+!
+top
+routing-policy
+  prefix-list ipv4 IPV4-ISIS-TO-BGP-PFX
+    rule 10 allow 10.28.88.96/27 matching-len le 32
+    rule 20 allow 10.28.88.128/27 matching-len le 32
+  !
+  prefix-list ipv6 IPV6-ISIS-TO-BGP-PFX
+  !
+!
+top
+routing-policy
+  policy IPV4-ISIS-TO-BGP-OUT
+    rule 10 allow
+      match ipv4 prefix IPV4-ISIS-TO-BGP-PFX
+      set community 33287:1580,33287:7000
+    !
+  !
+  policy IPV6-ISIS-TO-BGP-OUT
+    rule 10 allow
+      match ipv6 prefix IPV6-ISIS-TO-BGP-PFX
+      set community 33287:1580,33287:7000
+    !
+  !
+!
+top
+routing-policy
+  prefix-list ipv4 IPV4-ADS-UET-UEN-PFX
+    rule 10 allow 10.42.0.0/15 matching-len le 32
+    rule 20 allow 10.44.0.0/16 matching-len le 32
+    rule 30 allow 10.48.0.0/15 matching-len le 32
+    rule 40 allow 10.123.0.0/16 matching-len le 32
+    rule 50 allow 69.240.0.0/16 matching-len le 32
+    rule 60 allow 69.241.128.0/17 matching-len le 32
+    rule 70 allow 69.252.128.0/18 matching-len le 32
+    rule 80 allow 96.111.0.0/16 matching-len le 32
+    rule 90 allow 98.241.0.0/16 matching-len le 32
+    rule 100 allow 198.51.100.0/24 matching-len le 32,
+    rule 110 allow 203.0.113.0/24 matching-len le 32,
+    rule 120 allow 224.0.0.0/3 matching-len le 32,
+    rule 130 allow 10.32.0.0/14 matching-len le 32
+    rule 140 allow 10.38.0.0/15 matching-len le 32
+    rule 150 allow 172.21.0.0/16 matching-len le 32
+    rule 160 allow 172.22.0.0/16 matching-len le 32
+    rule 170 allow 172.29.0.0/16 matching-len le 32
+    rule 180 allow 172.30.208.0/21 matching-len le 32
+    rule 190 allow 172.31.128.0/17 matching-len le 32
+    rule 200 allow 96.216.62.112/30 matching-len le 32
+  !
+!
+top
+routing-policy
+  policy IPV4-LOOPBACK-TO-BGP-SR
+    rule 10 allow
+      description "Label index is equal to node-sid minus 400000"
+      match ipv4 prefix IPV4-LOOPBACK-PFX
+      set community 33287:1305
+      set community 33287:7000
+      set large-community 33287:1305:302
+      set sr-label-index 6150
+    !
+  !
+  policy IPV6-LOOPBACK-TO-BGP-SR
+    rule 10 allow
+      description "Label index is equal to node-sid minus 400000"
+      match ipv6 prefix IPV6-LOOPBACK-PFX
+      set community 33287:1305
+      set community 33287:7000
+      set large-community 33287:1305:302
+      set sr-label-index 206150
+    !
+  !
+!
+top
+routing-policy
+  policy IPV4-MCAST-LOOPBACK-OUT
+    rule 10 allow
+      set local-preference 300
+      set med 100
+      set origin igp
+    !
+  !
+!
+top
+routing-policy
+  policy IPV4-MGMT-LOOPBACK-OUT
+    rule 10 allow
+      set local-preference 300
+      set med 100
+      set origin igp
+    !
+  !
+  policy IPV6-MGMT-LOOPBACK-OUT
+    rule 10 allow
+      set local-preference 300
+      set med 100
+      set origin igp
+    !
+  !
+!
+top
+routing-policy
+  community-list BGP-LU-CL
+    rule 10 allow regex .*:1305
+  !
+  community-list ASN33287-BGP-LU-CL
+    rule 10 allow value 33287:1305
+  !
+  community-list CDV-HARMONY-CL
+    rule 10 allow regex .*:1077
+  !
+  community-list Atlanta-CET-CL
+    rule 10 allow value 33287:1060
+  !
+  community-list ASN33287-SBC-EXT-CL
+    rule 10 allow value 33287:1075
+  !
+!
+top
+routing-policy
+  community-list EDIA-CUSTOMER-CL
+    rule 10 allow regex .*:2900
+  !
+  community-list ASN33287-SPECIFIC-ROUTES-CL
+    rule 10 allow value 33287:2005
+  !
+  community-list ASN33287-ENS-CL
+    rule 10 allow value 33287:2030
+  !
+  community-list ASN33287-CPE-SPECIFIC-CL
+    rule 10 allow value 33287:2005
+    rule 20 allow well-known-community no-export
+  !
+!
+top
+routing-policy
+  community-list TRANSIT-CL
+    rule 10 allow regex .*:3050
+  !
+  community-list PAID-PEER-CL
+    rule 10 allow regex .*:3020
+  !
+  community-list SFI-CL
+    rule 10 allow regex .*:3000
+  !
+  community-list ASN33287-CDN-CL
+    rule 10 allow value 33287:3060
+  !
+  community-list SIP-PEER-CL
+    rule 10 allow regex .*:3010
+  !
+!
+top
+routing-policy
+  large-community-list LEGACY-RESI-AR-PREFIXES-CL
+    rule 10 allow value 33287:1:901
+  !
+  large-community-list LEGACY-AR-PREFIXES-CL
+    rule 10 allow value 33287:1:902
+  !
+!
+top
+routing-policy
+  large-community-list NO-EXPORT-LOOPBACK-CL
+    rule 10 allow regex .*:.*:30[2-6]
+  !
+!
+top
+routing-policy
+  prefix-list ipv4 IPV4-NEXT-HOP-TRACKING-PFX
+    rule 10 allow 0.0.0.0/0 matching-len ge 29
+  !
+  prefix-list ipv6 IPV6-NEXT-HOP-TRACKING-PFX
+    rule 10 allow ::/0 matching-len ge 64
+  !
+!
+top
+routing-policy
+  policy IPV4-NEXT-HOP-TRACKING
+    rule 10 allow
+      match ipv4 prefix IPV4-NEXT-HOP-TRACKING-PFX
+    !
+  !
+  policy IPV6-NEXT-HOP-TRACKING
+    rule 10 allow
+      match ipv6 prefix IPV6-NEXT-HOP-TRACKING-PFX
+    !
+  !
+!
+top
+routing-policy
+  policy IPV4-ISIS-DEFAULT-ORG
+    rule 10 allow
+      match ipv4 prefix IPV4-DEFAULT-ROUTE-PFX
+      match path-type ebgp
+    !
+  !
+!
+routing-policy
+  policy IPV6-ISIS-DEFAULT-ORG
+    rule 10 allow
+      match ipv6 prefix IPV6-DEFAULT-ROUTE-PFX
+      match path-type ebgp
+    !
+  !
+!
+top
+routing-policy
+  policy IPV4-CONNECTED-TO-BGP
+    rule 10 deny
+      match ipv4 prefix IPV4-ALL-LOOPBACK-PFX
+    !
+    rule 20 allow
+      set med 100
+      set local-preference 300
+      set origin igp
+    !
+  !
+  policy IPV6-CONNECTED-TO-BGP
+    rule 10 deny
+      match ipv6 prefix IPV6-ALL-LOOPBACK-PFX
+    !
+    rule 20 allow
+      set med 100
+      set local-preference 300
+      set origin igp
+    !
+  !
+!
+top
+routing-policy
+  policy IPV4-U-RR-SERVER-IN
+    rule 10 allow
+      match as-path LEGACY-ASPATH
+      set med 50000
+    !
+    rule 20 allow
+      match as-path IBONE-ASPATH
+      set med 50000
+    !
+    rule 30 allow
+    !
+  !
+
+  policy IPV4-LU-RR-SERVER-IN
+    rule 10 allow
+      match as-path LEGACY-ASPATH
+      match community BGP-LU-CL
+      set med 50000
+    !
+    rule 20 allow
+      match as-path IBONE-ASPATH
+      match community BGP-LU-CL
+      set med 50000
+    !
+    rule 30 allow
+      match community BGP-LU-CL
+    !
+    rule 40 deny
+    !
+  !
+
+  policy IPV4-U-RR-SERVER-OUT
+    rule 10 deny
+      match community BGP-LU-CL
+    !
+    rule 20 allow
+      match ipv4 prefix IPV4-ADS-UET-UEN-PFX
+      set ipv4 next-hop 96.109.183.232
+    !
+    rule 30 allow
+      match as-path IS-LOCAL
+      set ipv4 next-hop 96.109.183.47
+    !
+    rule 40 allow
+      match as-path LEGACY-ASPATH
+      match large-community LEGACY-RESI-AR-PREFIXES-CL
+      set ipv4 next-hop 96.109.183.228
+    !
+    rule 50 allow
+      match as-path LEGACY-ASPATH
+      match large-community LEGACY-AR-PREFIXES-CL
+      set ipv4 next-hop 96.109.183.227
+    !
+    rule 60 allow
+      match as-path IBONE-ASPATH
+      set ipv4 next-hop 96.109.183.74
+    !
+    rule 999 deny
+    !
+  !
+
+  policy IPV4-LU-RR-SERVER-OUT
+    rule 10 allow
+      match community BGP-LU-CL
+      set ipv4 next-hop 96.109.183.47
+    !
+    rule 20 deny
+    !
+  !
+
+  policy IPV6-U-RR-SERVER-IN
+    rule 10 allow
+      match as-path LEGACY-ASPATH
+      set med 50000
+    !
+    rule 20 allow
+      match as-path IBONE-ASPATH
+      set med 50000
+    !
+    rule 30 allow
+    !
+  !
+
+  policy IPV6-U-RR-SERVER-OUT
+    rule 10 deny
+      match community BGP-LU-CL
+    !
+    rule 20 allow
+      match as-path IS-LOCAL
+      set ipv6 next-hop 2001:558:4c0:0:3000::47
+    !
+    rule 30 allow
+      match as-path LEGACY-ASPATH
+      match large-community LEGACY-RESI-AR-PREFIXES-CL
+      set ipv6 next-hop 2001:558:4c0:0:3001::30
+    !
+    rule 40 allow
+      match as-path LEGACY-ASPATH
+      match large-community LEGACY-AR-PREFIXES-CL
+      set ipv6 next-hop 2001:558:4c0:0:3001::20
+    !
+    rule 50 allow
+      match as-path IBONE-ASPATH
+      set ipv6 next-hop 2001:558:4c0:0:3001::10
+    !
+    rule 999 deny
+    !
+  !
+
+  policy IPV6-LU-RR-SERVER-IN
+    rule 10 allow
+      match as-path LEGACY-ASPATH
+      match community BGP-LU-CL
+      set med 50000
+    !
+    rule 20 allow
+      match as-path IBONE-ASPATH
+      match community BGP-LU-CL
+      set med 50000
+    !
+    rule 30 allow
+      match community BGP-LU-CL
+    !
+    rule 40 deny
+    !
+  !
+
+  policy IPV6-LU-RR-SERVER-OUT
+    rule 10 allow
+      match community BGP-LU-CL
+      set ipv6 next-hop 2001:558:4c0:0:3000::47
+    !
+    rule 20 deny
+    !
+  !
+!
+top
+routing-policy
+  policy IPV4-U-ASBR-CS-IN
+    rule 10 allow
+    !
+  !
+  policy IPV6-U-ASBR-CS-IN
+    rule 10 allow
+    !
+  !
+
+  policy IPV4-U-ASBR-CS-OUT
+    rule 10 deny
+      match community BGP-LU-CL
+    !
+    rule 20 allow
+    !
+  !
+  policy IPV6-U-ASBR-CS-OUT
+    rule 10 deny
+      match community BGP-LU-CL
+    !
+    rule 20 allow
+    !
+  !
+
+  policy IPV4-LU-ASBR-CS-IN
+    rule 10 allow
+      match community BGP-LU-CL
+      set aigp + 26
+    !
+  !
+  policy IPV6-LU-ASBR-CS-IN
+    rule 10 allow
+      match community BGP-LU-CL
+      set aigp + 26
+    !
+  !
+
+  policy IPV4-LU-ASBR-CS-OUT
+    rule 10 allow
+      match community ASN33287-BGP-LU-CL
+      set aigp igp-metric
+    !
+    rule 20 deny
+    !
+  !
+  policy IPV6-LU-ASBR-CS-OUT
+    rule 10 allow
+      match community ASN33287-BGP-LU-CL
+      set aigp igp-metric
+    !
+    rule 20 deny
+    !
+  !
+!
+top
+routing-policy
+  policy IPV4-LU-ASBR-AR-IN
+    rule 10 allow
+      match community BGP-LU-CL
+    !
+    rule 20 deny
+    !
+  !
+  policy IPV4-LU-ASBR-AR-OUT
+    rule 10 deny
+      match large-community NO-EXPORT-LOOPBACK-CL
+    !
+    rule 20 allow
+      match community BGP-LU-CL
+      set med igp-cost
+    !
+    rule 30 deny
+    !
+  !
+!
+top
+routing-policy
+  policy IPV4-U-ASBR-RESI-AR-IN
+    rule 10 allow
+      set large-community-list LEGACY-RESI-AR-PREFIXES-CL additive
+    !
+  !
+  policy IPV4-U-ASBR-RESI-AR-OUT
+    rule 10 deny
+      match community BGP-LU-CL
+    !
+    rule 20 allow
+      set med igp-cost
+    !
+  !
+  policy IPV6-U-ASBR-RESI-AR-IN
+    rule 10 allow
+      set large-community-list LEGACY-RESI-AR-PREFIXES-CL additive
+    !
+  !
+  policy IPV6-U-ASBR-RESI-AR-OUT
+    rule 10 deny
+      match community BGP-LU-CL
+    !
+    rule 20 allow
+      set med igp-cost
+    !
+  !
+!
+top
+routing-policy
+  policy IPV4-U-ASBR-AR-IN
+    rule 10 allow
+      set med 5000
+      set large-community-list LEGACY-AR-PREFIXES-CL additive
+    !
+  !
+  policy IPV4-U-ASBR-AR-OUT
+    rule 10 deny
+      match community BGP-LU-CL
+    !
+    rule 20 allow
+      set med igp-cost
+    !
+  !
+  policy IPV4-LU-ASBR-AR-OUT
+    rule 10 deny
+      match community BGP-LU-CL
+    !
+    rule 20 allow
+      set med igp-cost
+    !
+  !
+  policy IPV6-U-ASBR-AR-IN
+    rule 10 allow
+      set med +5000
+      set large-community-list LEGACY-AR-PREFIXES-CL additive
+    !
+  !
+  policy IPV6-U-ASBR-AR-OUT
+    rule 10 deny
+      match community BGP-LU-CL
+    !
+    rule 20 allow
+      set med igp-cost
+    !
+  !
+!
+top
+routing-policy
+  policy IPV4-U-ASBR-AR-IN
+    rule 10 allow
+      set med 5000
+      set large-community-list LEGACY-AR-PREFIXES-CL additive
+    !
+  !
+  policy IPV4-LU-ASBR-AR-OUT
+    rule 10 deny
+      match community BGP-LU-CL
+    !
+    rule 20 allow
+      set med igp-cost
+    !
+  !
+!
+top
+protocols
+  bgp 33287
+    advertise-update-delay 300
+    dynamic-med-interval 0
+    router-id 96.109.183.47
+    address-family ipv4-unicast
+      add-path receive enabled
+      fast-reroute enabled
+      label-allocation per-prefix
+      maximum-paths ibgp 8
+      maximum-paths ebgp 8
+      network 96.109.183.47/32 policy IPV4-LOOPBACK-TO-BGP-SR
+      network 96.109.183.232/32 policy IPV4-MCAST-LOOPBACK-OUT
+      network 96.109.251.175/32 policy IPV4-MGMT-LOOPBACK-OUT
+      next-hop-tracking policy IPV4-NEXT-HOP-TRACKING
+      redistribute isis policy IPV4-ISIS-TO-BGP-OUT
+    !
+    address-family ipv6-unicast
+      add-path receive enabled
+      fast-reroute enabled
+      label-allocation per-prefix
+      maximum-paths ibgp 8
+      maximum-paths ebgp 8
+      network 2001:558:4c0:0:3000::47/128 policy IPV6-LOOPBACK-TO-BGP-SR
+      network 2001:558:4c0:0:3100::47/128 policy IPV6-MGMT-LOOPBACK-OUT
+      next-hop-tracking policy IPV6-NEXT-HOP-TRACKING
+      redistribute isis policy IPV6-ISIS-TO-BGP-OUT
+    !
+    graceful-restart
+      restart-time 120
+      stalepath-time 360
+    !
+  !
+!
+top
+protocols
+  bgp 33287
+    neighbor-group IPV4-LU-RR-SERVER
+      remote-as 33287
+      advertisement-interval 1
+      authentication md5 password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+      description "Peering with RR server for IPv4 Labeled Unicast"
+      update-source lo0
+      address-family ipv4-unicast
+        add-path send
+          admin-state enabled
+        !
+        aigp enabled
+        labeled-unicast
+        policy IPV4-LU-RR-SERVER-IN in
+        policy IPV4-LU-RR-SERVER-OUT out
+        send-community community-type both
+        send-large-community enabled
+        soft-reconfiguration inbound
+        maximum-prefix
+          limit 40000
+          threshold 100
+          exceed-action warning-only
+        !
+      !
+    !
+    neighbor-group IPV6-LU-RR-SERVER
+      remote-as 33287
+      advertisement-interval 1
+      authentication md5 password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+      description "Peering with RR server for IPv6  Labeled Unicast"
+      update-source lo60
+      address-family ipv6-unicast
+        add-path send
+          admin-state enabled
+        !
+        aigp enabled
+        labeled-unicast
+        policy IPV6-LU-RR-SERVER-IN in
+        policy IPV6-LU-RR-SERVER-OUT out
+        send-community community-type both
+        send-large-community enabled
+        soft-reconfiguration inbound
+        maximum-prefix
+          limit 40000
+          threshold 100
+          exceed-action warning-only
+        !
+      !
+    !
+  !
+!
+top
+protocols
+  bgp 33287
+    neighbor-group IPV4-U-RR-SERVER
+      remote-as 33287
+      advertisement-interval 1
+      authentication md5 password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+      description "Peering with RR server for IPv4 Unicast"
+      update-source lo0
+      address-family ipv4-unicast
+        add-path send
+          admin-state enabled
+        !
+        policy IPV4-U-RR-SERVER-IN in
+        policy IPV4-U-RR-SERVER-OUT out
+        send-community community-type both
+        soft-reconfiguration inbound
+        maximum-prefix
+          limit 4000000
+          threshold 100
+          exceed-action warning-only
+        !
+      !
+    !
+    neighbor-group IPV6-U-RR-SERVER
+      remote-as 33287
+      advertisement-interval 1
+      authentication md5 password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+      description "Peering with RR server for IPv6 Unicast"
+      update-source lo60
+      address-family ipv6-unicast
+        add-path send
+          admin-state enabled
+        !
+        policy IPV6-U-RR-SERVER-IN in
+        policy IPV6-U-RR-SERVER-OUT out
+        send-community community-type both
+        soft-reconfiguration inbound
+        maximum-prefix
+          limit 10000000
+          threshold 100
+          exceed-action warning-only
+        !
+      !
+    !
+  !
+!
+top
+protocols
+  bgp 33287
+    neighbor-group IPV4-LU-CRAN-IBONE
+      remote-as 7922
+      advertisement-interval 3
+      authentication md5 password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+      description "IPv4 Labeled Unicast EBGP Peering Session from CRAN ASBR to IBone CS"
+      bfd
+        admin-state enabled
+        bfd-type single-hop
+        min-rx 100
+        min-tx 100
+        multiplier 3
+      !
+      address-family ipv4-unicast
+        remove-private-as
+        aigp enabled
+        labeled-unicast
+        policy IPV4-LU-ASBR-CS-IN in
+        policy IPV4-LU-ASBR-CS-OUT out
+        send-community community-type both
+        soft-reconfiguration inbound
+        maximum-prefix
+          limit 20000
+          exceed-action warning-only
+          restart-interval 100
+        !
+        sr-labeled-unicast
+          allow-external-sid receive-only
+        !
+      !
+    !
+    neighbor-group IPV6-LU-CRAN-IBONE
+      remote-as 7922
+      advertisement-interval 3
+      authentication md5 password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+      description "IPv6 Labeled Unicast EBGP Peering Session from CRAN ASBR to IBone CS"
+      bfd
+        admin-state enabled
+        bfd-type single-hop
+        min-rx 100
+        min-tx 100
+        multiplier 3
+      !
+      address-family ipv6-unicast
+        remove-private-as
+        aigp enabled
+        labeled-unicast
+        policy IPV6-LU-ASBR-CS-IN in
+        policy IPV6-LU-ASBR-CS-OUT out
+        send-community community-type both
+        soft-reconfiguration inbound
+        maximum-prefix
+          limit 20000
+          exceed-action warning-only
+          restart-interval 100
+        !
+        sr-labeled-unicast
+          allow-external-sid receive-only
+        !
+      !
+    !
+    neighbor-group IPV4-LU-ASBR-AR
+      remote-as 4200001220
+      advertisement-interval 3
+      authentication md5 password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+      description "IPv4 Labeled Unicast EBGP Peering Session from CRAN ASBR to Legacy AR"
+      local-as 4200001221 type no-prepend-replace-as
+      address-family ipv4-unicast
+        labeled-unicast
+        policy IPV4-LU-ASBR-AR-IN in
+        policy IPV4-LU-ASBR-AR-OUT out
+        send-community community-type both
+        soft-reconfiguration inbound
+        maximum-prefix
+          limit 20000
+          exceed-action warning-only
+          restart-interval 100
+        !
+        sr-labeled-unicast
+          allow-external-sid receive-only
+        !
+      !
+    !
+  !
+!
+top
+protocols
+  bgp 33287
+    neighbor-group IPV4-U-CRAN-IBONE
+      remote-as 7922
+      advertisement-interval 3
+      authentication md5 password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+      description "IPv4 EBGP Peering Session from CRAN ASBR to IBone CS"
+      bfd
+        admin-state enabled
+        bfd-type single-hop
+        min-rx 100
+        min-tx 100
+        multiplier 3
+      !
+      address-family ipv4-unicast
+        remove-private-as
+        policy IPV4-U-ASBR-CS-IN in
+        policy IPV4-U-ASBR-CS-OUT out
+        send-community community-type both
+        soft-reconfiguration inbound
+        maximum-prefix
+          limit 2000000
+          exceed-action warning-only
+          restart-interval 100
+        !
+      !
+    !
+    neighbor-group IPV6-U-CRAN-IBONE
+      remote-as 7922
+      advertisement-interval 3
+      authentication md5 password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+      description "IPv6 EBGP Peering Session from CRAN ASBR to IBone CS"
+      bfd
+        admin-state enabled
+        bfd-type single-hop
+        min-rx 100
+        min-tx 100
+        multiplier 3
+      !
+      address-family ipv6-unicast
+        remove-private-as
+        policy IPV6-U-ASBR-CS-IN in
+        policy IPV6-U-ASBR-CS-OUT out
+        send-community community-type both
+        soft-reconfiguration inbound
+        maximum-prefix
+          limit 5000000
+          exceed-action warning-only
+          restart-interval 100
+        !
+      !
+    !
+    neighbor-group IPV4-U-ASBR-AR
+      remote-as 4200001220
+      advertisement-interval 3
+      authentication md5 password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+      description "IPv4 Unicast EBGP Peering Session from CRAN ASBR to Legacy AR"
+      local-as 4200001221 type no-prepend-replace-as
+      address-family ipv4-unicast
+        policy IPV4-U-ASBR-AR-IN in
+        policy IPV4-U-ASBR-AR-OUT out
+        send-community community-type both
+        soft-reconfiguration inbound
+        maximum-prefix
+          limit 5000000
+          exceed-action warning-only
+          restart-interval 100
+        !
+      !
+    !
+    neighbor-group IPV4-U-ASBR-RESI-AR
+      remote-as 4200001220
+      authentication md5 password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+      advertisement-interval 3
+      description "IPv4 Unicast EBGP Peering Session from CRAN ASBR to Resi AR"
+      local-as 4200001221 type no-prepend-replace-as
+      address-family ipv4-unicast
+        policy IPV4-U-ASBR-RESI-AR-IN in
+        policy IPV4-U-ASBR-RESI-AR-OUT out
+        send-community community-type both
+        soft-reconfiguration inbound
+        maximum-prefix
+          limit 5000000
+          exceed-action warning-only
+          restart-interval 100
+        !
+      !
+    !
+    neighbor-group IPV6-U-ASBR-RESI-AR
+      remote-as 4200001220
+      authentication md5 password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+      advertisement-interval 3
+      description "IPv6 Unicast EBGP Peering Session from CRAN ASBR to Resi AR"
+      local-as 4200001221 type no-prepend-replace-as
+      address-family ipv6-unicast
+        policy IPV6-U-ASBR-RESI-AR-IN in
+        policy IPV6-U-ASBR-RESI-AR-OUT out
+        send-community community-type both
+        soft-reconfiguration inbound
+        maximum-prefix
+          limit 5000000
+          exceed-action warning-only
+          restart-interval 100
+        !
+      !
+    !
+    neighbor-group IPV6-U-ASBR-AR
+      remote-as 4200001220
+      authentication md5 password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+      advertisement-interval 3
+      description "IPv6 Unicast EBGP Peering Session from CRAN ASBR to Legacy AR"
+      local-as 4200001221 type no-prepend-replace-as
+      address-family ipv6-unicast
+        policy IPV6-U-ASBR-AR-IN in
+        policy IPV6-U-ASBR-AR-OUT out
+        send-community community-type both
+        soft-reconfiguration inbound
+        maximum-prefix
+          limit 5000000
+          exceed-action warning-only
+          restart-interval 100
+        !
+      !
+    !
+top
+protocols
+  isis
+    nsr disabled
+    maximum-adjacencies 500 threshold 75
+    maximum-routes 1000000 threshold 75
+    instance 33287
+      advertise max-metric disabled
+      advertise overload-bit disabled
+      authentication level level-2 snp-auth sign-validate
+      authentication level level-2 type md5 password enc-gAAAAABjXXXJlaMZt7SYQ5uMfhR_e18iH5__zx1yTt-w3HqCDO1DTr-n6_JtgtIBIW9NslQ6GVdhF6x9ZbAGHibxnovvS3fa2g==
+      dynamic-hostname enabled
+      iso-network 49.0000.0961.0918.3047.00
+      lsp-mtu 1492
+      max-metric 16777214
+      overload on-startup
+        admin-state enabled
+        advertisement-type overload-bit
+        wait-for-bgp
+      !
+      level level-2
+      timers
+        lsp-interval 0
+        lsp-lifetime 4000
+        lsp-refresh 3600
+        throttle lsp delay 0 max-holdtime 2000 min-holdtime 200
+      !
+      address-family ipv4-unicast
+        default-originate policy IPV4-ISIS-DEFAULT-ORG
+        maximum-paths 32
+        prefix-priority high tag 5
+        traffic-engineering level level-2 enabled
+        timers
+          throttle spf delay 50 max-holdtime 2000 min-holdtime 100
+        !
+        microloop-avoidance
+          admin-state enabled
+          fib-delay 3000
+        !
+        segment-routing
+          admin-state enabled
+        !
+        ti-fast-reroute
+          admin-state enabled
+          protection-mode link
+        !
+      !
+      address-family ipv6-unicast
+        default-originate policy IPV6-ISIS-DEFAULT-ORG
+        topology enabled
+        traffic-engineering level level-2 enabled
+        maximum-paths 32
+        prefix-priority high tag 5
+        timers
+          throttle spf delay 50 max-holdtime 2000 min-holdtime 100
+        !
+        microloop-avoidance
+          admin-state enabled
+          fib-delay 3000
+        !
+        segment-routing
+          admin-state enabled
+        !
+        ti-fast-reroute
+          admin-state enabled
+          protection-mode link
+        !
+      !
+      flex-algo
+        use-legacy-te disabled
+        participate 128
+          advertise JANUS-FA128
+        !
+      !
+    !
+  !
+top
+protocols
+  isis
+    instance 33287
+      interface lo0
+        address-family ipv4-unicast
+          metric level level-2 1
+          tag level level-2 5
+        !
+      !
+      interface lo60
+        address-family ipv6-unicast
+          metric level level-2 1
+          tag level level-2 5
+        !
+      !
+      interface lo99
+        address-family ipv4-unicast
+          metric level level-2 1
+          tag level level-2 5
+        !
+      !
+      interface lo999
+        address-family ipv4-unicast
+          metric level level-2 1
+        !
+        address-family ipv6-unicast
+          metric level level-2 1
+        !
+      !
+      interface lo4001
+        address-family ipv4-unicast
+          metric level level-2 1
+          tag level level-2 5
+        !
+      !
+      interface lo6001
+        address-family ipv6-unicast
+          metric level level-2 1
+          tag level level-2 5
+        !
+      !
+      interface lo4002
+        address-family ipv4-unicast
+          metric level level-2 1
+          tag level level-2 5
+        !
+      !
+      interface lo6002
+        address-family ipv6-unicast
+          metric level level-2 1
+          tag level level-2 5
+        !
+      !
+      interface lo4099
+        address-family ipv4-unicast
+          metric level level-2 1
+          tag level level-2 5
+        !
+      !
+      interface lo6099
+        address-family ipv6-unicast
+          metric level level-2 1
+          tag level level-2 5
+        !
+      !
+    !
+  !
+!
+top
+routing-policy
+  policy IPV4-LEGACY-AR-P2P
+    rule 10 allow
+    !
+  !
+  policy IPV4-LEGACY-RESI-AR-P2P
+    rule 10 allow
+    !
+  !
+  policy IPV4-IBONE-P2P
+    rule 10 allow
+    !
+  !
+  policy IPV4-IBONE-ANYCAST
+    rule 10 allow
+    !
+  !
+  policy IPV4-IBONE-ANYCAST-CA
+    rule 10 allow
+      call IPV4-IBONE-P2P
+      on-match next
+    !
+    rule 20 allow
+      call IPV4-IBONE-ANYCAST
+    !
+  !
+
+  policy IPV6-LEGACY-AR-P2P
+    rule 10 allow
+    !
+  !
+  policy IPV6-LEGACY-RESI-AR-P2P
+    rule 10 allow
+    !
+  !
+  policy IPV6-IBONE-P2P
+    rule 10 allow
+    !
+  !
+  policy IPV6-IBONE-ANYCAST
+    rule 10 allow
+    !
+  !
+  policy IPV6-IBONE-ANYCAST-CA
+    rule 10 allow
+      call IPV6-IBONE-P2P
+      on-match next
+    !
+    rule 20 allow
+      call IPV6-IBONE-ANYCAST
+    !
+  !
+!
+top
+
+protocols
+  isis
+    instance 33287
+      interface lo4001
+        address-family ipv4-unicast
+          conditional-adv policy IPV4-LEGACY-AR-P2P
+        !
+      !
+      interface lo6001
+        address-family ipv6-unicast
+          conditional-adv policy IPV6-LEGACY-AR-P2P
+        !
+      !
+      interface lo4002
+        address-family ipv4-unicast
+          conditional-adv policy IPV4-LEGACY-RESI-AR-P2P
+        !
+      !
+      interface lo6002
+        address-family ipv6-unicast
+          conditional-adv policy IPV6-LEGACY-RESI-AR-P2P
+        !
+      !
+      interface lo4099
+        address-family ipv4-unicast
+          conditional-adv policy IPV4-IBONE-ANYCAST-CA
+        !
+      !
+      interface lo6099
+        address-family ipv6-unicast
+          conditional-adv policy IPV6-IBONE-ANYCAST-CA
+        !
+      !
+    !
+  !
+!
+top
+protocols
+  isis
+    instance 33287
+      interface lo0
+        address-family ipv4-unicast
+          prefix-sid label 406150 prefix-type node
+          prefix-sid flex-algo 128 label 406650 prefix-type node
+        !
+      !
+      interface lo60
+        address-family ipv6-unicast
+          prefix-sid label 606150 prefix-type node
+          prefix-sid flex-algo 128 label 606650 prefix-type node
+        !
+      !
+      interface lo4001
+        address-family ipv4-unicast
+          prefix-sid label 406025 prefix-type anycast
+          prefix-sid flex-algo 128 label 406075 prefix-type anycast
+        !
+      !
+      interface lo6001
+        address-family ipv6-unicast
+          prefix-sid label 606025 prefix-type anycast
+          prefix-sid flex-algo 128 label 606075 prefix-type anycast
+        !
+      !
+      interface lo4002
+        address-family ipv4-unicast
+          prefix-sid label 406040 prefix-type anycast
+          prefix-sid flex-algo 128 label 406090 prefix-type anycast
+        !
+      !
+      interface lo6002
+        address-family ipv6-unicast
+          prefix-sid label 606040 prefix-type anycast
+          prefix-sid flex-algo 128 label 606090 prefix-type anycast
+        !
+      !
+      interface lo4099
+        address-family ipv4-unicast
+          prefix-sid label 406010 prefix-type anycast
+          prefix-sid flex-algo 128 label 406060 prefix-type anycast
+        !
+      !
+      interface lo6099
+        address-family ipv6-unicast
+          prefix-sid label 606010 prefix-type anycast
+          prefix-sid flex-algo 128 label 606060 prefix-type anycast
+        !
+      !
+    !
+  !
+!
+top
+protocols
+  static
+    address-family ipv4-unicast
+      route 192.0.2.100/32
+        null0
+      !
+    !
+    address-family ipv6-unicast
+      route 2001:DB8::DEAD/128
+         null0
+      !
+    !
+  !
+!
+top
+protocols
+  lldp
+    admin-state enabled
+  !
+!
+top
+services
+  performance-monitoring
+    profiles
+      link-delay JANUS-SRPM
+        computation-interval 60
+        probe-interval 1
+        advertisement accelerated
+          admin-state enabled
+          delay-change-threshold percentages 30
+        !
+        advertisement periodic
+          delay-change-threshold microseconds 100
+          interval 300
+        !
+      !
+    !
+  !
+  simple-twamp
+    session-reflector
+      admin-state enabled
+      reflector-port 862
+    !
+    session-sender
+      admin-state enabled
+      reflector-port 862
+    !
+  !
+!
+top
+routing-policy
+  prefix-list ipv4 SSM-RANGE-PFX
+    rule 10 allow 232.0.0.0/8,
+    rule 20 allow 233.0.0.0/8,
+    rule 30 allow 239.0.0.0/8
+  !
+!
+top
+protocols
+  pim
+    graceful-restart-timer 90
+    hello-interval 1
+    ssm-ranges SSM-RANGE-PFX
+  !
+!
+top
+qos
+  traffic-class-map TC1_IN_CORE
+    dscp 2
+    dscp cs1
+    dscp af11
+    dscp 42
+    dscp voice-admit
+    match any
+    mpls-exp 1
+  !
+  traffic-class-map TC1_OUT_CORE
+    match any
+    qos-tag 1
+  !
+  traffic-class-map TC2_IN_CORE
+    dscp 5
+    match any
+    mpls-exp 2
+  !
+  traffic-class-map TC2_OUT_CORE
+    match any
+    qos-tag 2
+  !
+  traffic-class-map TC3_IN_CORE
+    dscp cs2
+    dscp af21
+    dscp af22
+    dscp af23
+    dscp af31
+    dscp af32
+    dscp af33
+    dscp 35
+    dscp 37
+    match any
+    mpls-exp 3
+  !
+  traffic-class-map TC3_OUT_CORE
+    match any
+    qos-tag 3
+  !
+  traffic-class-map TC4_IN_CORE
+    dscp af41
+    dscp af42
+    dscp af43
+    match any
+    mpls-exp 4
+  !
+  traffic-class-map TC4_OUT_CORE
+    match any
+    qos-tag 4
+  !
+  traffic-class-map TC5_IN_CORE
+    dscp 45
+    dscp ef
+    match any
+    mpls-exp 5
+  !
+  traffic-class-map TC5_OUT_CORE
+    match any
+    qos-tag 5
+  !
+  traffic-class-map TC6_IN_CORE
+    dscp cs6
+    match any
+    mpls-exp 6
+  !
+  traffic-class-map TC6_OUT_CORE
+    match any
+    qos-tag 6
+  !
+!
+top
+qos
+  policy CORE-INPUT-QOS
+    rule 1
+      match traffic-class TC1_IN_CORE
+      action
+        set
+          mpls-exp 1
+          qos-tag 1
+        !
+      !
+    !
+    rule 2
+      match traffic-class TC2_IN_CORE
+      action
+        set
+          mpls-exp 2
+          qos-tag 2
+        !
+      !
+    !
+    rule 3
+      match traffic-class TC3_IN_CORE
+      action
+        set
+          mpls-exp 3
+          qos-tag 3
+        !
+      !
+    !
+    rule 4
+      match traffic-class TC4_IN_CORE
+      action
+        set
+          mpls-exp 4
+          qos-tag 4
+        !
+      !
+    !
+    rule 5
+      match traffic-class TC5_IN_CORE
+      action
+        set
+          mpls-exp 5
+          qos-tag 5
+        !
+      !
+    !
+    rule 6
+      match traffic-class TC6_IN_CORE
+      action
+        set
+          mpls-exp 6
+          qos-tag 6
+        !
+      !
+    !
+    rule default
+      action
+        set
+          mpls-exp 0
+          qos-tag 0
+        !
+      !
+    !
+  !
+!
+top
+qos
+  wred-profile JANUS_WRED
+    curve green
+      min 10 milliseconds max 50 milliseconds max-drop 90
+    !
+  !
+  policy CORE-OUTPUT-QOS
+    rule 1
+      match traffic-class TC1_OUT_CORE
+      action
+        queue
+          forwarding-class af
+            bandwidth 30 percent
+            wred-profile JANUS_WRED
+          !
+        !
+      !
+    !
+    rule 2
+      match traffic-class TC2_OUT_CORE
+      action
+        queue
+          forwarding-class af
+            bandwidth 1 percent
+            delay-behavior low-delay
+            low-delay-priority high
+          !
+        !
+      !
+    !
+    rule 3
+      match traffic-class TC3_OUT_CORE
+      action
+        queue
+          forwarding-class af
+            bandwidth 40 percent
+          !
+        !
+      !
+    !
+    rule 4
+      match traffic-class TC4_OUT_CORE
+      action
+        queue
+          forwarding-class af
+            bandwidth 20 percent
+          !
+        !
+      !
+    !
+    rule 5
+      match traffic-class TC5_OUT_CORE
+      action
+        queue
+          forwarding-class super-ef
+            max-bandwidth 90 percent
+          !
+        !
+      !
+    !
+    rule 6
+      match traffic-class TC6_OUT_CORE
+      action
+        queue
+          forwarding-class hp
+            max-bandwidth 10 percent
+          !
+        !
+      !
+    !
+    rule default
+      action
+        queue
+          forwarding-class df
+            bandwidth 1 percent
+          !
+        !
+      !
+    !
+  
+top
+forwarding-options
+  igp-frr-scale enabled
+!
+top

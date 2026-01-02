@@ -1,0 +1,4 @@
+System Name: TestRouter
+Version: DNOS [25.2.0] build [500_dev], Copyright 2025 DRIVENETS LTD.
+Patch: N/A
+

@@ -1,0 +1,48 @@
+---
+ancestor: null
+releases:
+  1.0.0:
+    release_date: '2025-01-01'
+    changes:
+      release_summary: |
+        Initial release of the DriveNets DNOS collection.
+        
+        This collection provides Ansible modules and plugins for managing
+        DriveNets Network Operating System (DNOS) devices.
+      major_changes:
+        - Initial collection structure with network_cli and netconf support
+        - Added core modules for device management (command, config, facts, reboot)
+        - Added resource modules for interfaces configuration
+        - Added banner configuration module
+    modules:
+      - name: dnos_banner
+        description: Module to configure multiline banners
+        namespace: ''
+      - name: dnos_command
+        description: Module to run commands on remote devices
+        namespace: ''
+      - name: dnos_config
+        description: Module to manage configuration sections
+        namespace: ''
+      - name: dnos_facts
+        description: Module to collect facts from remote devices
+        namespace: ''
+      - name: dnos_interfaces
+        description: Resource module to configure interfaces
+        namespace: ''
+      - name: dnos_reboot
+        description: Module to reboot DNOS devices
+        namespace: ''
+    plugins:
+      cliconf:
+        - name: dnos
+          description: Use dnos cliconf to run command on DriveNets DNOS platform
+          namespace: null
+      netconf:
+        - name: dnos
+          description: Use dnos netconf plugin to run netconf commands on DriveNets DNOS platform
+          namespace: null
+      terminal:
+        - name: dnos
+          description: Use dnos terminal plugin for SSH CLI connections
+          namespace: null

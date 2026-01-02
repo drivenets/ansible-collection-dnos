@@ -1,0 +1,22 @@
+# System-level dependencies for drivenets.dnos collection
+# These are OS packages needed for building/testing execution environments
+# Format: package_name [platform:version] [test|build]
+
+# SSH client libraries (required by paramiko and ansible-pylibssh)
+libssh-dev [platform:dpkg]
+libssh-devel [platform:rpm]
+
+# Cryptography dependencies (required by paramiko)
+libffi-dev [platform:dpkg]
+libffi-devel [platform:rpm]
+libssl-dev [platform:dpkg]
+openssl-devel [platform:rpm]
+
+# Build tools (may be needed for compiling Python packages)
+gcc [compile]
+python3-dev [platform:dpkg compile]
+python3-devel [platform:rpm compile]
+
+# Git (useful for development/testing)
+git [test]
+

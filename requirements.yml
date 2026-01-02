@@ -1,0 +1,7 @@
+---
+# Collection dependencies for DNOS Ansible Collection
+# Install with: ansible-galaxy collection install -r requirements.yml
+
+collections:
+  - name: ansible.netcommon
+    version: ">=5.0.0,<9.0.0"

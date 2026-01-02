@@ -1,0 +1,42 @@
+---
+# Dependabot configuration for automated dependency updates
+# Ref: https://docs.github.com/en/code-security/dependabot
+
+version: 2
+updates:
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "skip-changelog"
+      - "dependencies"
+    commit-message:
+      prefix: "ci"
+      prefix-development: "ci"
+      include: "scope"
+
+  # Python dependencies in requirements files
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "skip-changelog"
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps"
+      include: "scope"
+
+  # Ansible Galaxy dependencies
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "skip-changelog"
+      - "dependencies"
+      - "ansible"

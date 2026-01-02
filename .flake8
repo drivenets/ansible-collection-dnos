@@ -1,0 +1,33 @@
+[flake8]
+max-line-length = 100
+extend-ignore = F841,E203,E501,E402
+exclude = 
+    .git,
+    __pycache__,
+    build,
+    dist,
+    .eggs,
+    *.egg,
+    *.egg-info,
+    *_cache,
+    .env,
+    .github,
+    .mypy_cache,
+    .pytest_cache,
+    .tmontmp,
+    .venv,
+    .vscode,
+    pip-wheel-metadata,
+    venv,
+    .history,
+    __init__.py,
+    ansible_collections,
+    .tox,
+    specs
+count = true
+statistics = true
+builtins = _
+
+# Per-file ignores
+per-file-ignores = 
+    tests/**.py: S101

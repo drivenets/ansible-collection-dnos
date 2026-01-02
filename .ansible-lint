@@ -1,0 +1,39 @@
+---
+
+profile: production
+
+# Configuration for ansible-lint following team-devtools standards
+# Ref: https://github.com/ansible/team-devtools
+
+skip_list:
+  # ansible-lint does not like the `import-3.11` ignore in tests/sanity/ignore-*.txt
+  - sanity
+  # Skip experimental rules that may not be stable
+  - experimental
+
+exclude_paths:
+  # Exclude changelog from linting as it's auto-generated
+  - changelogs/changelog.yaml
+  # Exclude build artifacts
+  - .pytest_cache/
+  - __pycache__/
+  # Exclude virtual environments
+  - .venv/
+  - venv/
+  - .history/
+  - specs/*
+
+# Enable all rules except those explicitly skipped
+enable_list:
+  - args[modules]
+  - var-naming[no-reserved]
+  - var-naming[no-jinja]
+
+# Treat warnings as errors (matching CI/CD behavior)
+strict: true
+
+# Offline mode for environments without internet
+offline: false
+
+# Use production profile which includes sensible defaults
+# Line length and other rule configurations are handled by the profile

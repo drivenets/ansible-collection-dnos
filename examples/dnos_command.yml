@@ -1,0 +1,18 @@
+---
+# Example playbook demonstrating DNOS command usage
+- name: DNOS command Example
+  hosts: dnos_devices
+  gather_facts: false
+  connection: network_cli
+  tasks:
+    # Execute dnos show and other operational commands
+    - name: Get system information
+      drivenets.dnos.dnos_command:
+        commands:
+          - show system name
+          - show interfaces
+
+    - name: Clear counters
+      drivenets.dnos.dnos_command:
+        commands:
+          - clear netconf counters
