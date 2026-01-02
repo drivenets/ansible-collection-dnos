@@ -1,29 +1,27 @@
 ---
-
 namespace: drivenets
-
 name: dnos
-
 version: 1.0.0
 
 readme: README.md
-
-authors:
-
-  - Ansible Network Community (ansible-network)
-
-  - Ansible Drivenets Team (@drivenets)
-
 description: Ansible Network Collection for DriveNets DNOS devices.
-
 license_file: LICENSE
+authors:
+  - Ansible Network Community (ansible-network)
+  - DriveNets Ansible Team (@drivenets)
 
-tags: [networking, dnos, drivenets, cloud, netconf, automation]
+tags:
+  - networking
+  - dnos
+  - drivenets
+  - cloud
+  - netconf
+  - automation
 
 dependencies:
+  ansible.netcommon: ">=5.0.0"
 
-  "ansible.netcommon": ">=5.0.0"
-
-repository: https://github.com/ansible-collections/drivenets.dnos
-
-issues: https://github.com/ansible-collections/drivenets.dnos/issues
+repository: https://github.com/drivenets/ansible-collection-dnos
+issues: https://github.com/drivenets/ansible-collection-dnos/issues
+documentation: https://github.com/drivenets/ansible-collection-dnos#readme
+homepage: https://github.com/drivenets/ansible-collection-dnos
