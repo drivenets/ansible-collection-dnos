@@ -30,13 +30,3 @@ updates:
       prefix: "deps"
       prefix-development: "deps"
       include: "scope"
-
-  # Ansible Galaxy dependencies
-  - package-ecosystem: "gitsubmodule"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    labels:
-      - "skip-changelog"
-      - "dependencies"
-      - "ansible"
