@@ -1,7 +1,7 @@
 # DriveNets DNOS Collection
 
-[![CI](https://github.com/ansible-collections/drivenets.dnos/actions/workflows/tests.yml/badge.svg?branch=main&event=schedule)](https://github.com/ansible-collections/drivenets.dnos/actions/workflows/tests.yml)
-[![Codecov](https://codecov.io/gh/ansible-collections/drivenets.dnos/branch/main/graph/badge.svg)](https://codecov.io/gh/ansible-collections/drivenets.dnos)
+[![Collection tests](https://github.com/drivenets/ansible-collection-dnos/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/drivenets/ansible-collection-dnos/actions/workflows/test.yml)
+<!-- [![Codecov](https://codecov.io/gh/drivenets/ansible-collection-dnos/branch/main/graph/badge.svg)](https://codecov.io/gh/drivenets/ansible-collection-dnos) -->
 
 The Ansible DriveNets DNOS collection includes a variety of Ansible content to help automate the management of DriveNets Network Operating System (DNOS) network appliances.
 
@@ -17,11 +17,11 @@ For enterprise deployments and commercial support inquiries, please contact Driv
 
 We're here to help! We encourage you to join the Ansible community and participate in discussions:
 
-* **Questions about drivenets.dnos?** Please use the [**network** tag](https://forum.ansible.com/tag/network) when posting on the Ansible Forum.
+* **Questions about drivenets.dnos?** Please use the [**drivenets** tag](https://forum.ansible.com/tag/drivenets) when posting on the Ansible Forum.
 
 * Join the Ansible forum:
-  * [Get Help](https://forum.ansible.com/c/help/6): Get help with drivenets.dnos or help others. **Please tag your posts with 'network'.**
-  * [Posts tagged with 'network'](https://forum.ansible.com/tag/network): Subscribe to participate in network automation discussions, including drivenets.dnos topics.
+  * [Get Help](https://forum.ansible.com/c/help/6): Get help with drivenets.dnos or help others. **Please tag your posts with 'drivenets'.**
+  * [Posts tagged with 'drivenets'](https://forum.ansible.com/tag/drivenets): Subscribe to participate in discussions about drivenets.dnos.
   * [Ansible Network Automation Working Group](https://forum.ansible.com/g/network-wg): Join the team to automatically get subscribed to posts tagged with [network](https://forum.ansible.com/tag/network). We welcome your participation!
   * [Social Spaces](https://forum.ansible.com/c/chat/4): Gather and interact with fellow enthusiasts.
   * [News & Announcements](https://forum.ansible.com/c/news/5): Track project-wide announcements including social events.
