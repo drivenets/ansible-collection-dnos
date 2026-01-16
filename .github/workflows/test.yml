@@ -103,7 +103,7 @@ jobs:
         working-directory: ansible_collections/drivenets/dnos
 
       - name: Upload coverage reports
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           working-directory: ansible_collections/drivenets/dnos
 
